@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <title>What On Earth Are You Talking About?</title>
     <style>
-        /* ========== FONTS ========== */
+        /* FONTS */
         @font-face {
             font-family: "Cubano";
             src: url("https://cdn.jsdelivr.net/gh/wix-ideas/woe-dashboard@main/fonts/cubano-regular-webfont.woff") format("woff");
@@ -27,7 +27,7 @@
             font-display: swap;
         }
 
-        /* ========== COLORS & VARIABLES ========== */
+        /* COLORS & VARIABLES */
         :root {
             --dark: #1C313B;
             --yellow: #FFBD00;
@@ -42,7 +42,7 @@
             --stroke: 3px;
         }
 
-        /* ========== BASE RESET ========== */
+        /* RESET & BASE */
         * {
             margin: 0;
             padding: 0;
@@ -541,7 +541,7 @@
             min-width: 0;
         }
 
-        /* ========== NSFW TOGGLE - BLUE OFF RED ON ========== */
+        /* NSFW TOGGLE */
         .nsfwRow {
             display: flex;
             align-items: center;
@@ -742,7 +742,7 @@
             cursor: pointer;
         }
 
-        /* ========== MOBILE RESPONSIVE ========== */
+        /* RESPONSIVE */
         @media (max-width: 420px) {
             :root {
                 --pad: 12px;
@@ -770,7 +770,7 @@
             }
         }
 
-        /* ========== ANIMATIONS - SCORE FLOATS ========== */
+        /* ANIMATIONS */
         @keyframes fadeIn {
             from {
                 opacity: 0;
