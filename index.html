@@ -1,0 +1,1635 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>What On Earth Are You Talking About?</title>
+  <style>
+    /* FONTS */
+    @font-face {
+      font-family: "Cubano";
+      src: url("https://cdn.jsdelivr.net/gh/wix-ideas/woe-dashboard@main/fonts/cubano-regular-webfont.woff") format("woff");
+      font-display: swap;
+    }
+    @font-face {
+      font-family: "P22UndergroundHeavy";
+      src: url("https://cdn.jsdelivr.net/gh/wix-ideas/woe-dashboard@main/fonts/P22UndergroundHeavy.woff2") format("woff2"),
+           url("https://cdn.jsdelivr.net/gh/wix-ideas/woe-dashboard@main/fonts/P22UndergroundHeavy.woff") format("woff");
+      font-display: swap;
+    }
+    @font-face {
+      font-family: "P22UndergroundBook";
+      src: url("https://cdn.jsdelivr.net/gh/wix-ideas/woe-dashboard@main/fonts/P22UndergroundBook.woff2") format("woff2"),
+           url("https://cdn.jsdelivr.net/gh/wix-ideas/woe-dashboard@main/fonts/P22UndergroundBook.woff") format("woff");
+      font-display: swap;
+    }
+
+    /* COLORS & VARIABLES */
+    :root {
+      --dark: #1C313B;
+      --yellow: #FFBD00;
+      --green: #4DAD73;
+      --blue: #58B6BF;
+      --red: #DF4C4C;
+      --cream: #FFEAC3;
+      --white: #FFEAC3;
+      
+      --radius: 14px;
+      --pad: 14px;
+      --stroke: 3px;
+    }
+
+    /* RESET & BASE */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      height: 100%;
+      overflow: hidden;
+      -webkit-text-size-adjust: 100%;
+      background: var(--dark);
+      font-family: "P22UndergroundBook", system-ui, sans-serif;
+    }
+
+    /* APP CONTAINER */
+    #app {
+      height: 100dvh;
+      width: 100%;
+      position: relative;
+      overflow: hidden;
+      padding-top: env(safe-area-inset-top);
+      padding-bottom: env(safe-area-inset-bottom);
+    }
+
+    /* BACKGROUND ELEMENTS */
+    #starBg {
+      position: absolute;
+      inset: 0;
+      background: url('https://static.wixstatic.com/media/1369e3_bb2df02faad54822bfcb606973dad662~mv2.png') center/cover no-repeat;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    #earthTop {
+      position: absolute;
+      top: -86px;
+      left: 0;
+      right: 0;
+      height: 220px;
+      background: url('https://static.wixstatic.com/media/1369e3_8087604af0e44b8b997f033a30861fd1~mv2.png') center bottom/cover no-repeat;
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    /* SCREEN SYSTEM */
+    .screen {
+      display: none;
+      position: relative;
+      height: 100%;
+      width: 100%;
+      flex-direction: column;
+      gap: 10px;
+      padding: var(--pad);
+      z-index: 2;
+    }
+
+    .screen.active {
+      display: flex;
+    }
+
+    /* HEADER */
+    .header {
+      flex: 0 0 auto;
+      position: relative;
+      padding-top: 6px;
+    }
+
+    .brandRow {
+      display: flex;
+      align-items: stretch;
+      gap: 10px;
+    }
+
+    .titleWrap {
+      flex: 1 1 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      padding-top: 2px;
+    }
+
+    .titleLine1 {
+      font-family: "Cubano", system-ui, sans-serif;
+      font-size: 24px;
+      line-height: 1;
+      letter-spacing: 0.6px;
+      color: var(--yellow);
+      text-transform: uppercase;
+      text-shadow: 0 3px 0 rgba(0,0,0,0.25);
+      white-space: nowrap;
+    }
+
+    .titleLine2 {
+      font-family: "Cubano", system-ui, sans-serif;
+      font-size: 14px;
+      line-height: 1;
+      letter-spacing: 0.8px;
+      color: #ffffff;
+      text-transform: uppercase;
+      text-shadow: 0 2px 0 rgba(0,0,0,0.25);
+      white-space: nowrap;
+    }
+
+    .menuBtn {
+      flex: 0 0 auto;
+      width: 52px;
+      border-radius: 10px;
+      border: var(--stroke) solid var(--dark);
+      background: var(--yellow);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      padding: 0;
+    }
+
+    .menuBars {
+      width: 26px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .bar {
+      height: 5px;
+      border-radius: 99px;
+      background: var(--dark);
+    }
+
+    /* BOARD (CREAM CONTAINER) */
+    .board {
+      flex: 1 1 auto;
+      min-height: 0;
+      border-radius: 18px;
+      border: var(--stroke) solid var(--dark);
+      background: rgba(255, 234, 195, 1);
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      overflow: hidden;
+    }
+
+    /* DIVIDERS */
+    .divider {
+      height: var(--stroke);
+      width: 100%;
+      background: rgba(28, 49, 59, 0.85);
+      border-radius: 99px;
+      flex: 0 0 auto;
+    }
+
+    /* BUTTONS */
+    .btn {
+      font-family: "Cubano", system-ui, sans-serif;
+      border: var(--stroke) solid var(--dark);
+      border-radius: 14px;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: opacity 140ms;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .btn:active {
+      opacity: 0.8;
+    }
+
+    .btn-primary {
+      background: var(--yellow);
+      color: var(--dark);
+      font-size: 34px;
+      letter-spacing: 4px;
+      height: 66px;
+    }
+
+    .btn-secondary {
+      background: var(--green);
+      color: var(--dark);
+      font-size: 28px;
+      letter-spacing: 3px;
+      height: 56px;
+    }
+
+    .btn-tertiary {
+      background: var(--cream);
+      color: var(--dark);
+      font-size: 24px;
+      letter-spacing: 2px;
+      height: 50px;
+    }
+
+    .btn.disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+    }
+
+    /* MODAL OVERLAY */
+    .modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(28, 49, 59, 0.95);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .modal.active {
+      display: flex;
+    }
+
+    .modalContent {
+      background: var(--cream);
+      border-radius: 18px;
+      border: var(--stroke) solid var(--dark);
+      padding: 24px;
+      max-width: 400px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+      position: relative;
+    }
+
+    .modalTitle {
+      font-family: "Cubano", system-ui, sans-serif;
+      font-size: 28px;
+      color: var(--dark);
+      text-align: center;
+      margin-bottom: 20px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+
+    .modalClose {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      background: var(--yellow);
+      border: var(--stroke) solid var(--dark);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      font-weight: bold;
+      color: var(--dark);
+    }
+
+    /* GAME MODE SELECTION */
+    .gameModeBtn {
+      width: 100%;
+      height: 54px;
+      margin-bottom: 12px;
+      background: var(--dark);
+      color: var(--cream);
+      border: var(--stroke) solid var(--dark);
+      border-radius: 12px;
+      font-family: "P22UndergroundBook", system-ui, sans-serif;
+      font-size: 18px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: background 140ms;
+    }
+
+    .gameModeBtn:hover {
+      background: #2a4556;
+    }
+
+    /* DROPDOWN SELECT */
+    .selectWrap {
+      position: relative;
+      width: 100%;
+      flex: 0 0 auto;
+    }
+
+    .selectWrap select {
+      width: 100%;
+      height: 46px;
+      border-radius: var(--radius);
+      border: var(--stroke) solid var(--dark);
+      background: var(--dark);
+      color: var(--cream);
+      font-family: "P22UndergroundBook", system-ui, sans-serif;
+      font-size: 18px;
+      padding: 0 58px 0 14px;
+      outline: none;
+      appearance: none;
+      cursor: pointer;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+    }
+
+    .selectCaret {
+      position: absolute;
+      top: 50%;
+      right: 10px;
+      transform: translateY(-50%);
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.12);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      pointer-events: none;
+    }
+
+    .selectCaret::before {
+      content: "";
+      width: 0;
+      height: 0;
+      border-left: 6px solid transparent;
+      border-right: 6px solid transparent;
+      border-top: 8px solid var(--cream);
+      transform: translateY(1px);
+    }
+
+    /* PLAYERS LIST */
+    .playersWrap {
+      flex: 0 0 auto;
+      max-height: 260px;
+      overflow-y: auto;
+      padding-right: 4px;
+    }
+
+    .playersList {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .playerRow {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      border-radius: 12px;
+      border: var(--stroke) solid var(--dark);
+      background: var(--dark);
+      min-height: 54px;
+    }
+
+    .playerRow.alien {
+      background: var(--green);
+    }
+
+    .playerIcon {
+      width: 28px;
+      height: 28px;
+      flex: 0 0 auto;
+      border-radius: 8px;
+      overflow: hidden;
+      display: none;
+    }
+
+    .playerRow.alien .playerIcon {
+      display: block;
+    }
+
+    .playerIcon img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+    }
+
+    .playerName {
+      flex: 1 1 auto;
+      font-family: "P22UndergroundHeavy", system-ui, sans-serif;
+      font-size: 32px;
+      letter-spacing: 3px;
+      color: var(--cream);
+      text-transform: uppercase;
+      line-height: 1;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .playerScore {
+      font-family: "P22UndergroundHeavy", system-ui, sans-serif;
+      font-size: 28px;
+      color: var(--cream);
+      margin-left: auto;
+    }
+
+    .rowTools {
+      flex: 0 0 auto;
+      display: flex;
+      gap: 8px;
+    }
+
+    .toolBtn {
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      border: 0;
+      background: transparent;
+      padding: 0;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .toolBtn svg {
+      width: 22px;
+      height: 22px;
+      stroke: var(--cream);
+      stroke-width: 4.2;
+      fill: none;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .rowEditInput {
+      flex: 1 1 auto;
+      height: 34px;
+      border-radius: 10px;
+      border: 0;
+      background: rgba(255, 255, 255, 0.12);
+      color: var(--cream);
+      font-family: "P22UndergroundHeavy", system-ui, sans-serif;
+      font-size: 24px;
+      letter-spacing: 5px;
+      text-transform: uppercase;
+      outline: none;
+      padding: 0 12px;
+      min-width: 0;
+    }
+
+    /* ADD PLAYER */
+    .wideAddBtn {
+      width: 100%;
+      height: 54px;
+      border-radius: 12px;
+      border: var(--stroke) solid var(--dark);
+      background: var(--dark);
+      color: var(--cream);
+      font-family: "Cubano", system-ui, sans-serif;
+      font-size: 32px;
+      letter-spacing: 2px;
+      cursor: pointer;
+    }
+
+    .addEditor {
+      display: none;
+      gap: 10px;
+      align-items: center;
+      border-radius: 12px;
+      border: var(--stroke) solid var(--dark);
+      background: var(--dark);
+      padding: 10px 12px;
+    }
+
+    .addEditor.active {
+      display: flex;
+    }
+
+    .addInput {
+      flex: 1 1 auto;
+      height: 34px;
+      border-radius: 10px;
+      border: 0;
+      background: rgba(255, 255, 255, 0.12);
+      color: var(--cream);
+      font-family: "P22UndergroundHeavy", system-ui, sans-serif;
+      font-size: 24px;
+      letter-spacing: 5px;
+      text-transform: uppercase;
+      outline: none;
+      padding: 0 12px;
+      min-width: 0;
+    }
+
+    /* NSFW TOGGLE */
+    .nsfwRow {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .nsfwPill {
+      flex: 1 1 auto;
+      height: 46px;
+      border-radius: 12px;
+      background: var(--dark);
+      display: flex;
+      align-items: center;
+      padding: 0 14px;
+      transition: background 140ms;
+    }
+
+    .nsfwPill.active {
+      background: var(--red);
+    }
+
+    .nsfwLabel {
+      font-family: "P22UndergroundHeavy", system-ui, sans-serif;
+      font-size: 22px;
+      letter-spacing: 4px;
+      color: var(--cream);
+      text-transform: uppercase;
+    }
+
+    .nsfwSwitch {
+      flex: 0 0 auto;
+      width: 64px;
+      height: 46px;
+      border-radius: 12px;
+      background: var(--dark);
+      position: relative;
+      cursor: pointer;
+      border: 0;
+      padding: 0;
+      transition: background 140ms;
+    }
+
+    .nsfwSwitch.active {
+      background: var(--red);
+    }
+
+    .nsfwKnob {
+      width: 26px;
+      height: 26px;
+      border-radius: 10px;
+      background: var(--cream);
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      transition: transform 140ms ease;
+    }
+
+    .nsfwSwitch.active .nsfwKnob {
+      transform: translateX(18px);
+    }
+
+    /* HINT TEXT */
+    .hintText {
+      text-align: center;
+      font-family: "P22UndergroundBook", system-ui, sans-serif;
+      font-size: 12px;
+      letter-spacing: 2px;
+      color: rgba(28, 49, 59, 0.65);
+      text-transform: uppercase;
+      font-style: italic;
+    }
+
+    /* SPACER */
+    .spacer {
+      flex: 1 1 auto;
+      min-height: 0;
+    }
+
+    /* GAME SCREEN SPECIFIC */
+    .gameHeader {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      background: var(--dark);
+      border-radius: 12px;
+      padding: 8px;
+      border: var(--stroke) solid var(--dark);
+    }
+
+    .timer {
+      font-family: "Cubano", system-ui, sans-serif;
+      font-size: 32px;
+      color: var(--yellow);
+      background: rgba(0,0,0,0.3);
+      border-radius: 10px;
+      padding: 8px 16px;
+      min-width: 100px;
+      text-align: center;
+    }
+
+    .iconBtn {
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      background: var(--yellow);
+      border: var(--stroke) solid var(--dark);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-family: "Cubano", system-ui, sans-serif;
+      font-size: 24px;
+      color: var(--dark);
+    }
+
+    .gameTitle {
+      font-family: "Cubano", system-ui, sans-serif;
+      font-size: 14px;
+      color: var(--cream);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      flex: 1 1 auto;
+      text-align: center;
+    }
+
+    .conceptDisplay {
+      background: var(--cream);
+      border: var(--stroke) solid var(--dark);
+      border-radius: 14px;
+      padding: 20px;
+      text-align: center;
+      font-family: "Cubano", system-ui, sans-serif;
+      font-size: 36px;
+      color: var(--dark);
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      cursor: pointer;
+      min-height: 100px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .alienPlayers {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .alienTile {
+      background: var(--green);
+      border: var(--stroke) solid var(--dark);
+      border-radius: 12px;
+      padding: 12px 16px;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      min-width: 90px;
+      position: relative;
+    }
+
+    .alienInitials {
+      font-family: "Cubano", system-ui, sans-serif;
+      font-size: 28px;
+      color: var(--cream);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+
+    .alienScore {
+      font-family: "Cubano", system-ui, sans-serif;
+      font-size: 36px;
+      color: var(--cream);
+    }
+
+    /* MENU MODAL */
+    .menuList {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .menuItem {
+      width: 100%;
+      height: 54px;
+      background: var(--dark);
+      color: var(--cream);
+      border: var(--stroke) solid var(--dark);
+      border-radius: 12px;
+      font-family: "P22UndergroundBook", system-ui, sans-serif;
+      font-size: 20px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      cursor: pointer;
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 420px) {
+      :root {
+        --pad: 12px;
+      }
+      .titleLine1 { font-size: 22px; }
+      .titleLine2 { font-size: 13px; }
+      .menuBtn { width: 50px; }
+      .btn-primary { font-size: 32px; height: 62px; }
+      .conceptDisplay { font-size: 32px; }
+    }
+
+    /* ANIMATIONS */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes scoreFloat {
+      0% { opacity: 1; transform: translateY(0); }
+      100% { opacity: 0; transform: translateY(-40px); }
+    }
+
+    .scoreFloat {
+      position: absolute;
+      top: -20px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-family: "Cubano", system-ui, sans-serif;
+      font-size: 28px;
+      color: var(--green);
+      pointer-events: none;
+      animation: scoreFloat 1s ease-out forwards;
+    }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <div id="starBg"></div>
+    <div id="earthTop"></div>
+
+    <!-- LANDING/MODE SELECT MODAL -->
+    <div id="modeSelectModal" class="modal">
+      <div class="modalContent">
+        <div class="modalTitle">SELECT GAME MODE</div>
+        <button class="modalClose" onclick="closeModeSelect()">×</button>
+        <div class="menuList">
+          <button class="gameModeBtn" onclick="selectMode('woe')">What On Earth</button>
+          <button class="gameModeBtn" onclick="selectMode('skeleton')">Skeleton Crew [2p–3p]</button>
+          <button class="gameModeBtn" onclick="selectMode('encounters')">Close Encounters</button>
+          <button class="gameModeBtn" onclick="selectMode('space')">Space Race</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- HAMBURGER MENU MODAL -->
+    <div id="menuModal" class="modal">
+      <div class="modalContent">
+        <div class="modalTitle">MENU</div>
+        <button class="modalClose" onclick="closeMenu()">×</button>
+        <div class="menuList">
+          <button class="menuItem" onclick="showTutorial()">Tutorial</button>
+          <button class="menuItem" onclick="confirmNewGame()">New Game</button>
+          <button class="menuItem" onclick="confirmExit()">Exit Game</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- SETUP SCREEN -->
+    <div id="setupScreen" class="screen">
+      <div class="header">
+        <div class="brandRow">
+          <div class="titleWrap">
+            <div class="titleLine1">WHAT ON EARTH</div>
+            <div class="titleLine2">ARE YOU TALKING ABOUT?</div>
+          </div>
+          <button class="menuBtn" onclick="openMenu()">
+            <div class="menuBars">
+              <div class="bar"></div>
+              <div class="bar"></div>
+              <div class="bar"></div>
+            </div>
+          </button>
+        </div>
+      </div>
+
+      <div class="board">
+        <div class="selectWrap">
+          <select id="modeSelectDropdown" onchange="changeModeFromDropdown()">
+            <option value="woe">What On Earth</option>
+            <option value="skeleton">Skeleton Crew [2p–3p]</option>
+            <option value="encounters">Close Encounters</option>
+            <option value="space">Space Race</option>
+          </select>
+          <div class="selectCaret"></div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="playersWrap">
+          <div id="playersList" class="playersList"></div>
+        </div>
+
+        <button id="wideAddBtn" class="wideAddBtn" onclick="showAddMode()">+</button>
+
+        <div id="addEditor" class="addEditor">
+          <input id="addInput" class="addInput" maxlength="3" placeholder="___" onkeydown="handleAddKeydown(event)">
+          <button class="toolBtn" onclick="cancelAdd()">
+            <svg viewBox="0 0 24 24"><path d="M4 7h16"/><path d="M10 11v7"/><path d="M14 11v7"/><path d="M7 7l1-3h8l1 3"/><path d="M6 7l1 14h10l1-14"/></svg>
+          </button>
+          <button class="toolBtn" onclick="confirmAdd()">
+            <svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>
+          </button>
+        </div>
+
+        <div class="spacer"></div>
+
+        <div id="tutorialHint" class="hintText">OPEN MENU FOR TUTORIAL</div>
+
+        <div class="divider"></div>
+
+        <div class="nsfwRow">
+          <div id="nsfwPill" class="nsfwPill">
+            <div class="nsfwLabel">NSFW</div>
+          </div>
+          <button id="nsfwSwitch" class="nsfwSwitch" onclick="toggleNSFW()">
+            <div class="nsfwKnob"></div>
+          </button>
+        </div>
+      </div>
+
+      <button id="startBtn" class="btn btn-primary" onclick="startGame()">START GAME</button>
+    </div>
+
+    <!-- GAME SCREEN -->
+    <div id="gameScreen" class="screen">
+      <div class="gameHeader">
+        <div id="timerDisplay" class="timer">2:00</div>
+        <button class="iconBtn" onclick="togglePause()">⏸</button>
+        <button class="iconBtn" onclick="previousConcept()">◀</button>
+        <button class="iconBtn" onclick="skipConcept()">▶</button>
+        <div class="gameTitle">WHAT ON EARTH</div>
+        <button class="iconBtn" onclick="confirmExitGame()">×</button>
+      </div>
+
+      <div class="board">
+        <div id="conceptDisplay" class="conceptDisplay" onclick="revealConcept()">
+          TAP TO REVEAL
+        </div>
+
+        <div class="spacer"></div>
+
+        <div id="alienPlayers" class="alienPlayers"></div>
+
+        <div style="text-align: center; margin-top: 10px;">
+          <div style="font-family: 'Cubano', sans-serif; font-size: 18px; color: var(--dark);">
+            Round Score: <span id="roundScore">0</span>
+          </div>
+        </div>
+      </div>
+
+      <button id="nextRoundBtn" class="btn btn-primary" style="display: none;" onclick="goToInterRound()">NEXT ROUND</button>
+    </div>
+
+    <!-- INTER-ROUND SCREEN -->
+    <div id="interRoundScreen" class="screen">
+      <div class="header">
+        <div class="brandRow">
+          <div class="titleWrap">
+            <div class="titleLine1">WHAT ON EARTH</div>
+            <div class="titleLine2">ARE YOU TALKING ABOUT?</div>
+          </div>
+          <button class="menuBtn" onclick="openMenu()">
+            <div class="menuBars">
+              <div class="bar"></div>
+              <div class="bar"></div>
+              <div class="bar"></div>
+            </div>
+          </button>
+        </div>
+      </div>
+
+      <div class="board">
+        <button id="editToggleBtn" class="btn btn-tertiary" style="height: 46px; font-size: 20px;" onclick="toggleEditMode()">EDIT</button>
+
+        <div class="divider"></div>
+
+        <div class="playersWrap">
+          <div id="interPlayersList" class="playersList"></div>
+        </div>
+
+        <button id="addPlayerInterBtn" class="wideAddBtn" style="display: none;" onclick="addPlayerInter()">+</button>
+
+        <div class="spacer"></div>
+
+        <div class="divider"></div>
+
+        <div class="nsfwRow">
+          <div id="nsfwPillInter" class="nsfwPill">
+            <div class="nsfwLabel">NSFW</div>
+          </div>
+          <button id="nsfwSwitchInter" class="nsfwSwitch" onclick="toggleNSFW()">
+            <div class="nsfwKnob"></div>
+          </button>
+        </div>
+      </div>
+
+      <button class="btn btn-primary" onclick="nextRound()">NEXT ROUND</button>
+    </div>
+
+    <!-- END GAME SCREEN -->
+    <div id="endGameScreen" class="screen">
+      <div class="header">
+        <div class="brandRow">
+          <div class="titleWrap">
+            <div class="titleLine1">WHAT ON EARTH</div>
+            <div class="titleLine2">ARE YOU TALKING ABOUT?</div>
+          </div>
+          <button class="menuBtn" onclick="openMenu()">
+            <div class="menuBars">
+              <div class="bar"></div>
+              <div class="bar"></div>
+              <div class="bar"></div>
+            </div>
+          </button>
+        </div>
+      </div>
+
+      <div class="board">
+        <div style="text-align: center; padding: 20px 0;">
+          <img src="https://static.wixstatic.com/media/1369e3_7d50319049354d12a69f7ebbbd6733db~mv2.png" alt="Fireworks" style="width: 80px; height: 80px; margin-bottom: 10px;">
+          <div style="font-family: 'Cubano', sans-serif; font-size: 32px; color: var(--yellow); margin-bottom: 10px;">
+            <span id="winnerName">WINNER</span> WINS!
+          </div>
+          <div style="font-family: 'P22UndergroundHeavy', sans-serif; font-size: 24px; color: var(--dark);">
+            Score: <span id="winnerScore">0</span>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="playersWrap">
+          <div id="finalScoresList" class="playersList"></div>
+        </div>
+
+        <div class="spacer"></div>
+      </div>
+
+      <button class="btn btn-secondary" onclick="continuePlaying()">CONTINUE PLAYING</button>
+      <button class="btn btn-primary" onclick="confirmNewGame()">NEW GAME</button>
+      <button class="btn btn-tertiary" onclick="goToLanding()">MAIN MENU</button>
+    </div>
+  </div>
+
+  <script>
+    // GAME STATE
+    const state = {
+      currentScreen: 'setup',
+      mode: 'woe',
+      nsfwEnabled: false,
+      players: [],
+      editingPlayerId: null,
+      addMode: false,
+      
+      // Game state
+      currentRound: 1,
+      currentCycle: 0,
+      alienIndices: [],
+      
+      // Round state
+      timerSeconds: 120,
+      timerRunning: false,
+      timerInterval: null,
+      conceptRevealed: false,
+      currentConcept: '',
+      roundScores: {},
+      roundTotal: 0,
+      seenConcepts: [],
+      
+      // Inter-round
+      editMode: false
+    };
+
+    // MOCK CONCEPTS
+    const concepts = {
+      woe: [
+        'DEMOCRACY', 'PIZZA', 'GRAVITY', 'THUNDER', 'MICROWAVE', 'BIRTHDAY', 
+        'MEDICINE', 'TRAFFIC', 'MUSIC', 'INTERNET', 'MOVIES', 'SPORTS',
+        'WEDDING', 'VACATION', 'SCHOOL', 'MONEY', 'GOVERNMENT', 'RELIGION',
+        'FASHION', 'ART', 'SCIENCE', 'HISTORY', 'BREAKFAST', 'COFFEE'
+      ],
+      skeleton: [
+        'HAUNTED HOUSE', 'GRAVEYARD', 'GHOST', 'VAMPIRE', 'ZOMBIE', 'WITCH',
+        'MONSTER', 'CURSE', 'SPELL', 'POTION', 'BONES', 'COBWEBS'
+      ],
+      encounters: [
+        'UFO', 'ALIEN', 'SPACESHIP', 'PLANET', 'GALAXY', 'STAR', 'MOON',
+        'ASTEROID', 'COMET', 'BLACK HOLE', 'NEBULA', 'ORBIT'
+      ],
+      space: [
+        'ROCKET', 'ASTRONAUT', 'SATELLITE', 'MARS', 'VENUS', 'JUPITER',
+        'METEOR', 'APOLLO', 'NASA', 'TELESCOPE', 'SPACE STATION'
+      ]
+    };
+
+    // MODE CONFIGURATIONS
+    const modes = {
+      woe: { minPlayers: 4, title: 'What On Earth' },
+      skeleton: { minPlayers: 2, title: 'Skeleton Crew' },
+      encounters: { minPlayers: 4, title: 'Close Encounters' },
+      space: { minPlayers: 4, title: 'Space Race' }
+    };
+
+    // SCREEN MANAGEMENT
+    function showScreen(screenId) {
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+      document.getElementById(screenId + 'Screen').classList.add('active');
+      state.currentScreen = screenId;
+    }
+
+    function goToLanding() {
+      document.getElementById('modeSelectModal').classList.add('active');
+    }
+
+    // MODE SELECTION
+    function selectMode(modeKey) {
+      state.mode = modeKey;
+      state.players = [];
+      state.currentRound = 1;
+      state.currentCycle = 0;
+      closeModeSelect();
+      showScreen('setup');
+      document.getElementById('modeSelectDropdown').value = modeKey;
+      renderPlayers();
+      updateStartButton();
+    }
+
+    function changeModeFromDropdown() {
+      const newMode = document.getElementById('modeSelectDropdown').value;
+      if (confirm('Changing game mode will reset all players. Continue?')) {
+        state.mode = newMode;
+        state.players = [];
+        renderPlayers();
+        updateStartButton();
+      } else {
+        document.getElementById('modeSelectDropdown').value = state.mode;
+      }
+    }
+
+    function closeModeSelect() {
+      document.getElementById('modeSelectModal').classList.remove('active');
+    }
+
+    // MENU
+    function openMenu() {
+      document.getElementById('menuModal').classList.add('active');
+    }
+
+    function closeMenu() {
+      document.getElementById('menuModal').classList.remove('active');
+    }
+
+    function showTutorial() {
+      closeMenu();
+      alert('Tutorial coming soon! For now:\n\n1. Add players (top half are Aliens)\n2. Start game\n3. Reveal concept, start timer\n4. Tap alien names to score\n5. Humans get bonus points at milestones (3, 5, 6, 7... correct)');
+    }
+
+    function confirmNewGame() {
+      if (confirm('Start a new game? All progress will be lost.')) {
+        closeMenu();
+        resetGame();
+        goToLanding();
+      }
+    }
+
+    function confirmExit() {
+      if (confirm('Exit to main menu? All progress will be lost.')) {
+        closeMenu();
+        resetGame();
+        goToLanding();
+      }
+    }
+
+    function confirmExitGame() {
+      if (confirm('Exit to inter-round screen?')) {
+        pauseTimer();
+        goToInterRound();
+      }
+    }
+
+    function resetGame() {
+      state.players = [];
+      state.currentRound = 1;
+      state.currentCycle = 0;
+      state.seenConcepts = [];
+      state.editMode = false;
+      state.nsfwEnabled = false;
+      updateNSFWUI();
+    }
+
+    // NSFW TOGGLE
+    function toggleNSFW() {
+      state.nsfwEnabled = !state.nsfwEnabled;
+      updateNSFWUI();
+    }
+
+    function updateNSFWUI() {
+      const pill = document.getElementById('nsfwPill');
+      const sw = document.getElementById('nsfwSwitch');
+      const pillInter = document.getElementById('nsfwPillInter');
+      const swInter = document.getElementById('nsfwSwitchInter');
+      
+      if (state.nsfwEnabled) {
+        pill.classList.add('active');
+        sw.classList.add('active');
+        pillInter.classList.add('active');
+        swInter.classList.add('active');
+      } else {
+        pill.classList.remove('active');
+        sw.classList.remove('active');
+        pillInter.classList.remove('active');
+        swInter.classList.remove('active');
+      }
+    }
+
+    // PLAYER MANAGEMENT
+    function normalizeInitials(str) {
+      return String(str).trim().toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 3);
+    }
+
+    function getAlienCount() {
+      return Math.floor(state.players.length / 2);
+    }
+
+    function showAddMode() {
+      state.addMode = true;
+      document.getElementById('wideAddBtn').style.display = 'none';
+      document.getElementById('addEditor').classList.add('active');
+      document.getElementById('addInput').focus();
+    }
+
+    function cancelAdd() {
+      state.addMode = false;
+      document.getElementById('wideAddBtn').style.display = 'block';
+      document.getElementById('addEditor').classList.remove('active');
+      document.getElementById('addInput').value = '';
+    }
+
+    function confirmAdd() {
+      const input = document.getElementById('addInput');
+      const initials = normalizeInitials(input.value);
+      
+      if (!initials) return;
+      if (state.players.some(p => p.initials === initials)) {
+        alert('Player with these initials already exists!');
+        return;
+      }
+      
+      state.players.push({
+        id: Date.now() + '_' + Math.random().toString(36).slice(2),
+        initials: initials,
+        score: 0
+      });
+      
+      input.value = '';
+      renderPlayers();
+      updateStartButton();
+      cancelAdd();
+    }
+
+    function handleAddKeydown(e) {
+      if (e.key === 'Enter') confirmAdd();
+      if (e.key === 'Escape') cancelAdd();
+    }
+
+    function deletePlayer(id) {
+      state.players = state.players.filter(p => p.id !== id);
+      renderPlayers();
+      updateStartButton();
+    }
+
+    function movePlayer(id, direction) {
+      const idx = state.players.findIndex(p => p.id === id);
+      if (idx === -1) return;
+      
+      const newIdx = idx + direction;
+      if (newIdx < 0 || newIdx >= state.players.length) return;
+      
+      const temp = state.players[idx];
+      state.players[idx] = state.players[newIdx];
+      state.players[newIdx] = temp;
+      
+      renderPlayers();
+    }
+
+    function startEditPlayer(id) {
+      state.editingPlayerId = id;
+      renderPlayers();
+      setTimeout(() => {
+        const input = document.querySelector(`[data-edit-id="${id}"]`);
+        if (input) input.focus();
+      }, 0);
+    }
+
+    function saveEditPlayer(id) {
+      const input = document.querySelector(`[data-edit-id="${id}"]`);
+      if (!input) return;
+      
+      const initials = normalizeInitials(input.value);
+      if (!initials) return;
+      if (state.players.some(p => p.id !== id && p.initials === initials)) {
+        alert('Player with these initials already exists!');
+        return;
+      }
+      
+      const player = state.players.find(p => p.id === id);
+      if (player) player.initials = initials;
+      
+      state.editingPlayerId = null;
+      renderPlayers();
+    }
+
+    function renderPlayers() {
+      const list = document.getElementById('playersList');
+      const alienCount = getAlienCount();
+      
+      list.innerHTML = '';
+      
+      state.players.forEach((p, idx) => {
+        const isAlien = idx < alienCount;
+        const isEditing = state.editingPlayerId === p.id;
+        
+        const row = document.createElement('div');
+        row.className = 'playerRow' + (isAlien ? ' alien' : '');
+        
+        if (isEditing) {
+          row.innerHTML = `
+            <div class="playerIcon">${isAlien ? '<img src="https://static.wixstatic.com/media/1369e3_db01071c82a143b2a868e148a394a29b~mv2.png" alt="Alien">' : ''}</div>
+            <input class="rowEditInput" data-edit-id="${p.id}" value="${p.initials}" maxlength="3">
+            <div class="rowTools">
+              <button class="toolBtn" onclick="deletePlayer('${p.id}')">
+                <svg viewBox="0 0 24 24"><path d="M4 7h16"/><path d="M10 11v7"/><path d="M14 11v7"/><path d="M7 7l1-3h8l1 3"/><path d="M6 7l1 14h10l1-14"/></svg>
+              </button>
+              <button class="toolBtn" onclick="movePlayer('${p.id}', -1)">
+                <svg viewBox="0 0 24 24"><path d="M6 14l6-6 6 6"/></svg>
+              </button>
+              <button class="toolBtn" onclick="movePlayer('${p.id}', 1)">
+                <svg viewBox="0 0 24 24"><path d="M6 10l6 6 6-6"/></svg>
+              </button>
+              <button class="toolBtn" onclick="saveEditPlayer('${p.id}')">
+                <svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>
+              </button>
+            </div>
+          `;
+        } else {
+          row.innerHTML = `
+            <div class="playerIcon">${isAlien ? '<img src="https://static.wixstatic.com/media/1369e3_db01071c82a143b2a868e148a394a29b~mv2.png" alt="Alien">' : ''}</div>
+            <div class="playerName">${p.initials}</div>
+            <div class="rowTools">
+              <button class="toolBtn" onclick="startEditPlayer('${p.id}')">
+                <svg viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L8 18l-4 1 1-4 11.5-11.5z"/></svg>
+              </button>
+            </div>
+          `;
+        }
+        
+        list.appendChild(row);
+      });
+    }
+
+    function updateStartButton() {
+      const btn = document.getElementById('startBtn');
+      const mode = modes[state.mode];
+      const minPlayers = mode ? mode.minPlayers : 4;
+      
+      if (state.players.length >= minPlayers) {
+        btn.classList.remove('disabled');
+      } else {
+        btn.classList.add('disabled');
+      }
+    }
+
+    // GAME START
+    function startGame() {
+      const mode = modes[state.mode];
+      const minPlayers = mode ? mode.minPlayers : 4;
+      
+      if (state.players.length < minPlayers) {
+        alert(`This mode requires at least ${minPlayers} players.`);
+        return;
+      }
+      
+      resetRound();
+      showScreen('game');
+    }
+
+    function resetRound() {
+      state.timerSeconds = 120;
+      state.timerRunning = false;
+      state.conceptRevealed = false;
+      state.currentConcept = '';
+      state.roundTotal = 0;
+      state.roundScores = {};
+      
+      state.players.forEach(p => {
+        state.roundScores[p.id] = 0;
+      });
+      
+      updateTimerDisplay();
+      document.getElementById('conceptDisplay').textContent = 'TAP TO REVEAL';
+      document.getElementById('roundScore').textContent = '0';
+      document.getElementById('nextRoundBtn').style.display = 'none';
+      
+      renderAlienPlayers();
+    }
+
+    function renderAlienPlayers() {
+      const container = document.getElementById('alienPlayers');
+      const alienCount = getAlienCount();
+      
+      container.innerHTML = '';
+      
+      state.players.slice(0, alienCount).forEach(p => {
+        const tile = document.createElement('div');
+        tile.className = 'alienTile';
+        tile.onclick = () => scoreAlien(p.id);
+        
+        tile.innerHTML = `
+          <div class="alienInitials">${p.initials}</div>
+          <div class="alienScore" id="alien-score-${p.id}">0</div>
+        `;
+        
+        container.appendChild(tile);
+      });
+    }
+
+    // CONCEPT MANAGEMENT
+    function getRandomConcept() {
+      const pool = concepts[state.mode] || concepts.woe;
+      const available = pool.filter(c => !state.seenConcepts.includes(c));
+      
+      if (available.length === 0) {
+        state.seenConcepts = [];
+        return pool[Math.floor(Math.random() * pool.length)];
+      }
+      
+      const concept = available[Math.floor(Math.random() * available.length)];
+      state.seenConcepts.push(concept);
+      return concept;
+    }
+
+    function revealConcept() {
+      if (state.conceptRevealed) return;
+      
+      state.currentConcept = getRandomConcept();
+      state.conceptRevealed = true;
+      
+      document.getElementById('conceptDisplay').textContent = state.currentConcept;
+    }
+
+    function skipConcept() {
+      if (!state.conceptRevealed) return;
+      
+      state.currentConcept = getRandomConcept();
+      document.getElementById('conceptDisplay').textContent = state.currentConcept;
+    }
+
+    function previousConcept() {
+      // Undo last score
+      alert('Previous/undo functionality coming soon!');
+    }
+
+    // TIMER
+    function togglePause() {
+      if (!state.conceptRevealed) {
+        alert('Reveal the concept first!');
+        return;
+      }
+      
+      if (state.timerRunning) {
+        pauseTimer();
+      } else {
+        startTimer();
+      }
+    }
+
+    function startTimer() {
+      state.timerRunning = true;
+      state.timerInterval = setInterval(() => {
+        state.timerSeconds--;
+        updateTimerDisplay();
+        
+        if (state.timerSeconds <= 0) {
+          endRound();
+        }
+      }, 1000);
+    }
+
+    function pauseTimer() {
+      state.timerRunning = false;
+      if (state.timerInterval) {
+        clearInterval(state.timerInterval);
+        state.timerInterval = null;
+      }
+    }
+
+    function updateTimerDisplay() {
+      const mins = Math.floor(state.timerSeconds / 60);
+      const secs = state.timerSeconds % 60;
+      document.getElementById('timerDisplay').textContent = 
+        `${mins}:${secs.toString().padStart(2, '0')}`;
+    }
+
+    function endRound() {
+      pauseTimer();
+      document.getElementById('nextRoundBtn').style.display = 'flex';
+    }
+
+    // SCORING
+    function scoreAlien(playerId) {
+      if (!state.conceptRevealed) return;
+      
+      const player = state.players.find(p => p.id === playerId);
+      if (!player) return;
+      
+      // Increment alien score
+      state.roundScores[playerId]++;
+      player.score++;
+      state.roundTotal++;
+      
+      // Update display
+      const scoreEl = document.getElementById(`alien-score-${playerId}`);
+      if (scoreEl) scoreEl.textContent = state.roundScores[playerId];
+      
+      document.getElementById('roundScore').textContent = state.roundTotal;
+      
+      // Check for human milestones (3, 5, 6, 7, 8...)
+      checkHumanMilestones();
+      
+      // Load next concept
+      state.currentConcept = getRandomConcept();
+      document.getElementById('conceptDisplay').textContent = state.currentConcept;
+    }
+
+    function checkHumanMilestones() {
+      const alienCount = getAlienCount();
+      const humanPlayers = state.players.slice(alienCount);
+      
+      // Milestone at 3, then 5, then every 1 after (6, 7, 8...)
+      const milestones = [3, 5];
+      for (let i = 6; i <= state.roundTotal; i++) {
+        milestones.push(i);
+      }
+      
+      if (milestones.includes(state.roundTotal)) {
+        humanPlayers.forEach(h => h.score++);
+        // Could add visual feedback here
+      }
+    }
+
+    // INTER-ROUND
+    function goToInterRound() {
+      // Rotate players (top player to bottom)
+      if (state.players.length > 0) {
+        const topPlayer = state.players.shift();
+        state.players.push(topPlayer);
+        
+        // Check if cycle complete
+        // For now, simplified cycle tracking
+        state.currentRound++;
+      }
+      
+      renderInterRound();
+      showScreen('interRound');
+    }
+
+    function renderInterRound() {
+      const list = document.getElementById('interPlayersList');
+      const alienCount = getAlienCount();
+      
+      list.innerHTML = '';
+      
+      // Sort by score
+      const sortedPlayers = [...state.players].sort((a, b) => b.score - a.score);
+      
+      sortedPlayers.forEach((p, idx) => {
+        const isNextAlien = state.players.indexOf(p) < alienCount;
+        
+        const row = document.createElement('div');
+        row.className = 'playerRow' + (isNextAlien ? ' alien' : '');
+        
+        if (state.editMode) {
+          row.innerHTML = `
+            <div class="playerIcon">${isNextAlien ? '<img src="https://static.wixstatic.com/media/1369e3_db01071c82a143b2a868e148a394a29b~mv2.png" alt="Alien">' : ''}</div>
+            <div class="playerName">${p.initials}</div>
+            <div class="rowTools">
+              <button class="toolBtn" onclick="deletePlayer('${p.id}')">
+                <svg viewBox="0 0 24 24"><path d="M4 7h16"/><path d="M10 11v7"/><path d="M14 11v7"/><path d="M7 7l1-3h8l1 3"/><path d="M6 7l1 14h10l1-14"/></svg>
+              </button>
+              <button class="toolBtn" onclick="adjustScore('${p.id}', -1)">−</button>
+              <button class="toolBtn" onclick="adjustScore('${p.id}', 1)">+</button>
+            </div>
+            <div class="playerScore">${p.score}</div>
+          `;
+        } else {
+          row.innerHTML = `
+            <div class="playerIcon">${isNextAlien ? '<img src="https://static.wixstatic.com/media/1369e3_db01071c82a143b2a868e148a394a29b~mv2.png" alt="Alien">' : ''}</div>
+            <div class="playerName">${p.initials}</div>
+            <div class="playerScore">${p.score}</div>
+          `;
+        }
+        
+        list.appendChild(row);
+      });
+    }
+
+    function toggleEditMode() {
+      state.editMode = !state.editMode;
+      const btn = document.getElementById('editToggleBtn');
+      const addBtn = document.getElementById('addPlayerInterBtn');
+      
+      if (state.editMode) {
+        btn.textContent = 'FINISHED EDITING';
+        addBtn.style.display = 'block';
+      } else {
+        btn.textContent = 'EDIT';
+        addBtn.style.display = 'none';
+      }
+      
+      renderInterRound();
+    }
+
+    function adjustScore(playerId, delta) {
+      const player = state.players.find(p => p.id === playerId);
+      if (player) {
+        player.score = Math.max(0, player.score + delta);
+        renderInterRound();
+      }
+    }
+
+    function addPlayerInter() {
+      const initials = prompt('Enter player initials (max 3 characters):');
+      if (!initials) return;
+      
+      const normalized = normalizeInitials(initials);
+      if (!normalized) return;
+      if (state.players.some(p => p.initials === normalized)) {
+        alert('Player with these initials already exists!');
+        return;
+      }
+      
+      state.players.push({
+        id: Date.now() + '_' + Math.random().toString(36).slice(2),
+        initials: normalized,
+        score: 0
+      });
+      
+      renderInterRound();
+    }
+
+    function nextRound() {
+      // Check for game end (2 cycles = simplified as 2x player count rounds)
+      const cycleLength = state.players.length;
+      if (state.currentRound >= cycleLength * 2) {
+        checkForWinner();
+        return;
+      }
+      
+      resetRound();
+      showScreen('game');
+    }
+
+    // END GAME
+    function checkForWinner() {
+      const sorted = [...state.players].sort((a, b) => b.score - a.score);
+      const winner = sorted[0];
+      
+      document.getElementById('winnerName').textContent = winner.initials;
+      document.getElementById('winnerScore').textContent = winner.score;
+      
+      const finalList = document.getElementById('finalScoresList');
+      finalList.innerHTML = '';
+      
+      sorted.forEach(p => {
+        const row = document.createElement('div');
+        row.className = 'playerRow';
+        row.innerHTML = `
+          <div class="playerName">${p.initials}</div>
+          <div class="playerScore">${p.score}</div>
+        `;
+        finalList.appendChild(row);
+      });
+      
+      showScreen('endGame');
+    }
+
+    function continuePlaying() {
+      resetRound();
+      showScreen('game');
+    }
+
+    // INIT
+    window.addEventListener('load', () => {
+      goToLanding();
+      updateNSFWUI();
+    });
+  </script>
+</body>
+</html>
