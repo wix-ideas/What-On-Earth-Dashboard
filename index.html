@@ -809,10 +809,25 @@
 
         /* ========== LANDSCAPE MODE (NETFLIX STYLE) ========== */
         body.landscape-mode #app {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
             background: url('https://static.wixstatic.com/media/1369e3_bb2df02faad54822bfcb606973dad662~mv2.png') center/cover no-repeat;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* FORCE LANDSCAPE ON PORTRAIT DEVICES */
+        @media screen and (orientation: portrait) and (max-width: 1024px) {
+            body.landscape-mode #app {
+                transform: rotate(90deg);
+                transform-origin: bottom left;
+                position: absolute;
+                top: -100vw;
+                left: 0;
+                width: 100vh;
+                height: 100vw;
+                overflow: hidden;
+            }
         }
 
         body.landscape-mode .screen {
@@ -820,9 +835,11 @@
             /* Stack vertically, just wider */
             padding: 10px 40px;
             gap: 10px;
-            max-width: 900px;
-            /* Constrain width on very large screens */
-            margin: 0 auto;
+            width: 100%;
+            height: 100%;
+            max-width: none;
+            margin: 0;
+            display: flex;
         }
 
         body.landscape-mode .gameHeader {
@@ -849,20 +866,28 @@
             width: auto;
         }
 
+        body.landscape-mode .header {
+            display: none;
+            /* Hide standard header in game */
+        }
+
         body.landscape-mode .board {
             padding-left: 0;
             display: flex;
-            /* Flex to center content */
             flex-direction: column;
             justify-content: center;
+            align-items: center;
+            flex: 1;
+            width: 100%;
         }
 
         body.landscape-mode .conceptDisplay {
-            font-size: 48px;
-            /* Larger text for landscape */
-            padding: 30px;
-            width: 90%;
+            font-size: 42px;
+            /* Adjusted for better mobile fit */
+            padding: 20px;
+            width: 85%;
             margin: 0 auto;
+            flex: 0 0 auto;
         }
 
         body.landscape-mode .alienPlayers {
@@ -870,15 +895,29 @@
             flex-wrap: nowrap;
             /* Keep in one line if possible */
             justify-content: center;
-            gap: 20px;
-            margin-top: 10px;
+            gap: 15px;
+            margin-top: 20px;
+            width: 100%;
         }
 
         body.landscape-mode .alienTile {
-            width: 100px;
-            height: 50px;
+            width: 90px;
+            height: 44px;
             /* Shorter, wider tiles */
+            font-size: 18px;
+        }
+
+        /* Fix button sizes in landscape */
+        body.landscape-mode .iconBtn {
+            width: 44px;
+            height: 44px;
             font-size: 20px;
+        }
+
+        body.landscape-mode .btn-tertiary {
+            height: 44px;
+            font-size: 18px;
+            padding: 0 15px;
         }
 
         /* TEAM COLORS */
