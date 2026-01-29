@@ -806,6 +806,79 @@
             pointer-events: none;
             animation: scoreFloat 1s ease-out forwards;
         }
+
+        /* ========== LANDSCAPE MODE & TEAMS ========== */
+        body.landscape-mode #app {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        body.landscape-mode .screen {
+            flex-direction: row;
+            padding: 20px;
+        }
+
+        body.landscape-mode .header {
+            width: 300px;
+            flex-direction: column;
+            border-right: 3px solid var(--cream);
+            border-bottom: none;
+            padding-right: 20px;
+        }
+
+        body.landscape-mode .board {
+            flex: 1;
+            padding-left: 20px;
+        }
+
+        body.landscape-mode .gameHeader {
+            flex-direction: column;
+            width: 120px;
+            height: 100%;
+            border-bottom: none;
+            border-right: 3px solid var(--cream);
+        }
+
+        body.landscape-mode .gameHeader .gameTitle {
+            writing-mode: vertical-rl;
+            transform: rotate(180deg);
+            font-size: 24px;
+            letter-spacing: 5px;
+            margin: 20px 0;
+        }
+
+        body.landscape-mode .alienPlayers {
+            flex-direction: row;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        /* TEAM COLORS */
+        .team-red {
+            background: var(--red) !important;
+            color: white !important;
+        }
+
+        .team-blue {
+            background: var(--blue) !important;
+            color: white !important;
+        }
+
+        .team-green {
+            background: var(--green) !important;
+            color: white !important;
+        }
+
+        .playerRow.team-red {
+            border: 2px solid var(--red);
+            background: rgba(223, 76, 76, 0.2);
+        }
+
+        .playerRow.team-blue {
+            border: 2px solid var(--blue);
+            background: rgba(88, 182, 191, 0.2);
+        }
     </style>
 </head>
 
@@ -868,6 +941,15 @@
                     <div class="selectCaret"></div>
                 </div>
 
+                <div class="selectWrap" id="difficultySelectWrap" style="display: none; margin-top: 10px;">
+                    <select id="difficultySelect">
+                        <option value="normal">DIFFICULTY: NORMAL</option>
+                        <option value="hard">DIFFICULTY: HARD</option>
+                        <option value="insane">DIFFICULTY: INSANE</option>
+                    </select>
+                    <div class="selectCaret"></div>
+                </div>
+
                 <div class="divider"></div>
 
                 <div class="playersWrap">
@@ -917,12 +999,14 @@
         <!-- GAME SCREEN -->
         <div id="gameScreen" class="screen">
             <div class="gameHeader">
-                <div id="timerDisplay" class="timer">2:00</div>
+                <button id="roundStartBtn" class="btn btn-tertiary" style="height: 48px; display: none;"
+                    onclick="startRoundTimer()">START</button>
+                <div id="timerDisplay" class="timer" style="display: none;">2:00</div>
                 <button class="iconBtn" onclick="togglePause()">⏸</button>
                 <button class="iconBtn" onclick="previousConcept()">◀</button>
                 <button class="iconBtn" onclick="skipConcept()">▶</button>
-                <div class="gameTitle">WHAT ON EARTH</div>
-                <button class="iconBtn" onclick="confirmExitGame()">×</button>
+                <div id="gameTitleText" class="gameTitle">WHAT ON EARTH</div>
+                <button id="exitGameBtn" class="iconBtn" onclick="initiateExit()">✕</button>
             </div>
 
             <div class="board">
@@ -1117,7 +1201,21 @@
             state.currentCycle = 0;
             closeModeSelect();
             showScreen('setup');
+            closeModeSelect();
+            showScreen('setup');
             document.getElementById('modeSelectDropdown').value = modeKey;
+
+            // SHOW/HIDE DIFFICULTY
+            document.getElementById('difficultySelectWrap').style.display = (modeKey === 'skeleton') ? 'block' : 'none';
+
+            // TOGGLE LANDSCAPE MODE
+            const landscapeModes = ['skeleton', 'encounters', 'space'];
+            if (landscapeModes.includes(modeKey)) {
+                document.body.classList.add('landscape-mode');
+            } else {
+                document.body.classList.remove('landscape-mode');
+            }
+
             renderPlayers();
             updateStartButton();
         }
@@ -1168,10 +1266,43 @@
             }
         }
 
-        function confirmExitGame() {
-            if (confirm('Exit to inter-round screen?')) {
-                pauseTimer();
-                goToInterRound();
+        // CUSTOM EXIT CONFIRMATION
+        let exitTimeout;
+        function initiateExit() {
+            const title = document.getElementById('gameTitleText');
+            const exitBtn = document.getElementById('exitGameBtn');
+
+            // Save original state if not already saved
+            if (!exitBtn.dataset.original) {
+                exitBtn.dataset.original = exitBtn.innerHTML;
+                title.dataset.original = title.textContent;
+            }
+
+            title.textContent = 'ARE YOU SURE?';
+            title.style.color = 'var(--red)';
+            exitBtn.innerHTML = '✓';
+            exitBtn.onclick = confirmExitAction; // Change click handler
+
+            // Revert after 5 seconds
+            clearTimeout(exitTimeout);
+            exitTimeout = setTimeout(revertExit, 5000);
+        }
+
+        function confirmExitAction() {
+            clearTimeout(exitTimeout);
+            pauseTimer();
+            revertExit(); // Reset UI before leaving
+            goToInterRound();
+        }
+
+        function revertExit() {
+            const title = document.getElementById('gameTitleText');
+            const exitBtn = document.getElementById('exitGameBtn');
+            if (title && title.dataset.original) {
+                title.textContent = title.dataset.original;
+                title.style.color = 'var(--cream)';
+                exitBtn.innerHTML = exitBtn.dataset.original;
+                exitBtn.onclick = initiateExit; // Reset click handler
             }
         }
 
@@ -1250,9 +1381,26 @@
             });
 
             input.value = '';
+            assignTeams();
             renderPlayers();
             updateStartButton();
             cancelAdd();
+        }
+
+        function assignTeams() {
+            if (!['encounters', 'space'].includes(state.mode)) {
+                state.players.forEach(p => p.team = null);
+                return;
+            }
+
+            state.players.forEach((p, idx) => {
+                const isTeam1 = idx % 2 === 0;
+                if (state.mode === 'encounters') {
+                    p.team = isTeam1 ? 'team-red' : 'team-blue';
+                } else if (state.mode === 'space') {
+                    p.team = isTeam1 ? 'team-green' : 'team-blue';
+                }
+            });
         }
 
         function handleAddKeydown(e) {
@@ -1262,6 +1410,7 @@
 
         function deletePlayer(id) {
             state.players = state.players.filter(p => p.id !== id);
+            assignTeams();
             renderPlayers();
             updateStartButton();
         }
@@ -1310,6 +1459,7 @@
         function renderPlayers() {
             const list = document.getElementById('playersList');
             const alienCount = getAlienCount();
+            const isTeamMode = ['encounters', 'space'].includes(state.mode);
 
             list.innerHTML = '';
 
@@ -1317,8 +1467,13 @@
                 const isAlien = idx < alienCount;
                 const isEditing = state.editingPlayerId === p.id;
 
+                let teamClass = '';
+                if (p.team) {
+                    teamClass = ' ' + p.team;
+                }
+
                 const row = document.createElement('div');
-                row.className = 'playerRow' + (isAlien ? ' alien' : '');
+                row.className = 'playerRow' + (isAlien ? ' alien' : '') + teamClass;
 
                 if (isEditing) {
                     row.innerHTML = `
@@ -1398,6 +1553,10 @@
             document.getElementById('roundScore').textContent = '0';
             document.getElementById('nextRoundBtn').style.display = 'none';
 
+            // RESET HEADER CONTROLS
+            document.getElementById('roundStartBtn').style.display = 'none';
+            document.getElementById('timerDisplay').style.display = 'none';
+
             renderAlienPlayers();
         }
 
@@ -1407,9 +1566,13 @@
 
             container.innerHTML = '';
 
-            state.players.slice(0, alienCount).forEach(p => {
+            state.players.slice(0, alienCount).forEach((p, idx) => {
                 const tile = document.createElement('div');
-                tile.className = 'alienTile';
+
+                // Use assigned team or fallback
+                let teamClass = p.team ? (' ' + p.team) : '';
+
+                tile.className = 'alienTile' + teamClass;
                 tile.onclick = () => scoreAlien(p.id);
 
                 tile.innerHTML = `
@@ -1443,6 +1606,16 @@
             state.conceptRevealed = true;
 
             document.getElementById('conceptDisplay').textContent = state.currentConcept;
+
+            // SHOW START BUTTON, HIDE TIMER
+            document.getElementById('roundStartBtn').style.display = 'block'; // OR flex if styled that way
+            document.getElementById('timerDisplay').style.display = 'none';
+        }
+
+        function startRoundTimer() {
+            document.getElementById('roundStartBtn').style.display = 'none';
+            document.getElementById('timerDisplay').style.display = 'flex';
+            startTimer();
         }
 
         function skipConcept() {
@@ -1527,6 +1700,16 @@
             // Load next concept
             state.currentConcept = getRandomConcept();
             document.getElementById('conceptDisplay').textContent = state.currentConcept;
+
+            // ANIMATION: Green +1 float
+            const alienBtn = document.getElementById(`alien-score-${playerId}`);
+            if (alienBtn) {
+                const float = document.createElement('div');
+                float.className = 'scoreFloat';
+                float.textContent = '+1';
+                alienBtn.parentElement.appendChild(float);
+                setTimeout(() => float.remove(), 1000);
+            }
         }
 
         function checkHumanMilestones() {
@@ -1535,13 +1718,23 @@
 
             // Milestone at 3, then 5, then every 1 after (6, 7, 8...)
             const milestones = [3, 5];
-            for (let i = 6; i <= state.roundTotal; i++) {
+            for (let i = 6; i <= 50; i++) {
                 milestones.push(i);
             }
 
             if (milestones.includes(state.roundTotal)) {
                 humanPlayers.forEach(h => h.score++);
-                // Could add visual feedback here
+
+                // ANIMATION: Gold Helmet +1
+                const gameContainer = document.querySelector('.gameHeader');
+                const helmet = document.createElement('div');
+                helmet.className = 'scoreFloat';
+                helmet.style.color = 'var(--yellow)';
+                helmet.style.fontSize = '40px';
+                helmet.style.zIndex = '100';
+                helmet.textContent = '🪖 +1';
+                gameContainer.appendChild(helmet);
+                setTimeout(() => helmet.remove(), 1500);
             }
         }
 
@@ -1573,8 +1766,10 @@
             sortedPlayers.forEach((p, idx) => {
                 const isNextAlien = state.players.indexOf(p) < alienCount;
 
+                let teamClass = p.team ? (' ' + p.team) : '';
+
                 const row = document.createElement('div');
-                row.className = 'playerRow' + (isNextAlien ? ' alien' : '');
+                row.className = 'playerRow' + (isNextAlien ? ' alien' : '') + teamClass;
 
                 if (state.editMode) {
                     row.innerHTML = `
