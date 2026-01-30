@@ -69,7 +69,6 @@ function selectMode(modeKey) {
     state.currentCycle = 0;
     closeModeSelect();
     showScreen('setup');
-    document.getElementById('modeSelectDropdown').value = modeKey;
 
     const landscapeModes = ['woe', 'skeleton', 'encounters', 'space'];
     if (landscapeModes.includes(modeKey)) {
@@ -80,18 +79,6 @@ function selectMode(modeKey) {
 
     renderPlayers();
     updateStartButton();
-}
-
-function changeModeFromDropdown() {
-    const newMode = document.getElementById('modeSelectDropdown').value;
-    if (confirm('Changing game mode will reset all players. Continue?')) {
-        state.mode = newMode;
-        state.players = [];
-        renderPlayers();
-        updateStartButton();
-    } else {
-        document.getElementById('modeSelectDropdown').value = state.mode;
-    }
 }
 
 function closeModeSelect() {
@@ -500,7 +487,6 @@ window.addEventListener('load', () => {
 });
 
 window.selectMode = selectMode;
-window.changeModeFromDropdown = changeModeFromDropdown;
 window.closeModeSelect = closeModeSelect;
 window.openMenu = openMenu;
 window.closeMenu = closeMenu;
