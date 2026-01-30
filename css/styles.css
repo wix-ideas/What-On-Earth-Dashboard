@@ -83,7 +83,6 @@ html, body {
     display: none;
     position: relative;
     height: 100%;
-    min-height: 100dvh;
     width: 100%;
     flex-direction: column;
     gap: 10px;
