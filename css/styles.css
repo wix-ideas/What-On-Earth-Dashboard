@@ -231,9 +231,9 @@ html, body {
     -moz-appearance: none;
     background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M7 10l5 5 5-5z' fill='%23FFEAC3'/%3E%3C/svg%3E");
     background-repeat: no-repeat;
-    background-position: right 16px center;
-    background-size: 24px 24px;
-    padding-right: 48px;
+    background-position: right 12px center;
+    background-size: 32px 32px;
+    padding-right: 52px;
 }
 
 .mode-dropdown:focus {
@@ -1038,7 +1038,7 @@ body.fullscreen-mode .astronaut-score {
     height: 40px;
     border-radius: 8px;
     border: 0;
-    background: rgba(255, 255, 255, 0.2);
+    background: transparent;
     padding: 0;
     cursor: pointer;
     display: flex;
@@ -1047,16 +1047,16 @@ body.fullscreen-mode .astronaut-score {
     color: var(--cream);
     font-size: 20px;
     font-weight: 900;
-    transition: background 0.2s;
+    transition: opacity 0.2s;
 }
 
 .tool-btn:hover {
-    background: rgba(255, 255, 255, 0.3);
+    opacity: 0.7;
 }
 
 .tool-btn svg {
-    width: 22px;
-    height: 22px;
+    width: 24px;
+    height: 24px;
     fill: currentColor;
     stroke: currentColor;
     stroke-width: 0.5px;
@@ -1067,23 +1067,23 @@ body.fullscreen-mode .astronaut-score {
     height: 40px;
     border-radius: 8px;
     border: 0;
-    background: rgba(255, 255, 255, 0.2);
+    background: transparent;
     padding: 0;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
     color: var(--cream);
-    transition: background 0.2s;
+    transition: opacity 0.2s;
 }
 
 .edit-icon:hover {
-    background: rgba(255, 255, 255, 0.3);
+    opacity: 0.7;
 }
 
 .edit-icon svg {
-    width: 22px;
-    height: 22px;
+    width: 24px;
+    height: 24px;
     fill: currentColor;
     stroke: currentColor;
     stroke-width: 0.5px;
@@ -1096,8 +1096,9 @@ body.fullscreen-mode .astronaut-score {
     gap: 12px;
     height: 54px;
     border-radius: 12px;
-    background: var(--dark);
+    background: var(--red);
     padding: 0 16px;
+    border: 3px solid var(--dark);
 }
 
 .nsfw-label {
@@ -1113,8 +1114,8 @@ body.fullscreen-mode .astronaut-score {
     width: 60px;
     height: 32px;
     border-radius: 16px;
-    background: var(--dark);
-    border: 3px solid var(--cream);
+    background: var(--cream);
+    border: 3px solid var(--dark);
     position: relative;
     cursor: pointer;
     padding: 0;
@@ -1122,15 +1123,15 @@ body.fullscreen-mode .astronaut-score {
 }
 
 .nsfw-switch.active {
-    background: var(--red);
-    border-color: var(--cream);
+    background: var(--cream);
+    border-color: var(--dark);
 }
 
 .nsfw-knob {
     width: 22px;
     height: 22px;
     border-radius: 11px;
-    background: var(--cream);
+    background: var(--dark);
     position: absolute;
     top: 2px;
     left: 2px;
