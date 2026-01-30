@@ -1,11 +1,44 @@
-# What On Earth Dashboard
+# What On Earth Game Dashboard
 
-Game dashboard for **What On Earth Are You Talking About?** by Escape Tabletop Games. Built for https://www.escapetabletopgames.com/what-on-earth-dashboard
+A mobile-first party game dashboard for "What On Earth Are You Talking About?" - a fun guessing game where aliens try to understand human concepts.
 
-This is a mobile-first web app that handles all 4 game modes (What On Earth, Skeleton Crew, Close Encounters, Space Race), player management, scoring, and timers. It's designed to be embedded in Wix and hosted on Vercel.
+## Features
 
-Pure HTML/CSS/JavaScript. No frameworks, no build process. Just open index.html or deploy to Vercel.
+- **Mobile-First Design**: Optimized for phones and tablets
+- **Fullscreen Game Mode**: Automatic fullscreen during gameplay
+- **Multiple Game Modes**: Base WOE, Skeleton Crew, Close Encounters, Space Race
+- **Player Management**: Easy player setup and role assignment
+- **Responsive Layout**: Works on all screen sizes
+- **Wix Integration**: Communicates with Wix parent page for data
 
-## Deploy
+## Quick Start
 
-Push to GitHub, connect to Vercel, done. Every push auto-deploys.
+1. Clone the repository
+2. Open `index.html` in a web browser
+3. Or serve locally: `npx serve .`
+
+## Game Modes
+
+- **What On Earth**: 4+ players, aliens guess human concepts
+- **Skeleton Crew**: 2-3 players, cooperative mode
+- **Close Encounters**: 4+ players, team vs team
+- **Space Race**: 4+ players, team competition with milestones
+
+## Technology
+
+- Pure HTML5, CSS3, JavaScript (ES6 modules)
+- No external dependencies
+- PostMessage API for Wix communication
+- Local storage for game state persistence
+
+## Deployment
+
+This app is designed to be hosted on Vercel and embedded in a Wix page via iframe.
+
+## Development
+
+The app uses a modular architecture:
+- `js/ScreenManager.js` - Screen navigation and transitions
+- `js/GameStateManager.js` - Game state and persistence
+- `js/WixCommunication.js` - Parent page communication
+- `css/styles.css` - Responsive styling
