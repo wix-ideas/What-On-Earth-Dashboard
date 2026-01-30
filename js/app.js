@@ -59,7 +59,12 @@ function showScreen(screenId) {
 }
 
 function goToLanding() {
-    document.getElementById('modeSelectModal').classList.add('active');
+    showScreen('setup');
+}
+
+function handleModeChange(event) {
+    const modeKey = event.target.value;
+    selectMode(modeKey);
 }
 
 function selectMode(modeKey) {
@@ -67,7 +72,6 @@ function selectMode(modeKey) {
     state.players = [];
     state.currentRound = 1;
     state.currentCycle = 0;
-    closeModeSelect();
     
     showScreen('setup');
 
@@ -83,7 +87,7 @@ function selectMode(modeKey) {
 }
 
 function closeModeSelect() {
-    document.getElementById('modeSelectModal').classList.remove('active');
+    // No longer needed
 }
 
 function openMenu() {
@@ -234,7 +238,7 @@ function renderPlayers() {
                 <div class="player-icon"></div>
                 <input class="player-input" value="${p.initials}" maxlength="3" id="edit-${p.id}" />
                 <div class="row-tools">
-                    <button class="tool-btn delete" onclick="deletePlayer('${p.id}')">×</button>
+                    <button class="tool-btn delete" onclick="deletePlayer('${p.id}')">🗑</button>
                     <button class="tool-btn" onclick="movePlayerUp('${p.id}')">▲</button>
                     <button class="tool-btn" onclick="movePlayerDown('${p.id}')">▼</button>
                     <button class="tool-btn" onclick="savePlayerEdit('${p.id}')">✓</button>
@@ -253,7 +257,7 @@ function renderPlayers() {
                 <div class="player-name">${p.initials}</div>
                 <div class="row-tools">
                     <button class="tool-btn delete" onclick="deletePlayer('${p.id}')">🗑</button>
-                    <button class="tool-btn" onclick="editPlayer('${p.id}')">✏</button>
+                    <button class="tool-btn" onclick="editPlayer('${p.id}')">✎</button>
                 </div>
             `;
         }
@@ -595,11 +599,12 @@ window.addEventListener('load', () => {
     window.gameStateManager = gameStateManager;
     
     updateStartButton();
-    goToLanding();
+    showScreen('setup');
     updateNSFWUI();
 });
 
 window.selectMode = selectMode;
+window.handleModeChange = handleModeChange;
 window.closeModeSelect = closeModeSelect;
 window.openMenu = openMenu;
 window.closeMenu = closeMenu;

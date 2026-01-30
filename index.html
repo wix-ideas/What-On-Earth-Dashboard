@@ -57,6 +57,15 @@
             </div>
 
             <div class="board">
+                <div class="mode-dropdown-wrap">
+                    <select id="modeDropdown" class="mode-dropdown" onchange="handleModeChange(event)">
+                        <option value="woe">What On Earth</option>
+                        <option value="skeleton">Skeleton Crew [2p–3p]</option>
+                        <option value="encounters">Close Encounters</option>
+                        <option value="space">Space Race</option>
+                    </select>
+                </div>
+
                 <div class="players-wrap">
                     <div id="playersList" class="players-list"></div>
                     <div id="addPlayerRow" class="player-row" style="display: none;">
