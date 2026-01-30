@@ -368,19 +368,6 @@ body.fullscreen-mode #earthTop {
     z-index: 1;
 }
 
-@media screen and (orientation: portrait) and (max-width: 1024px) {
-    body.fullscreen-mode #app {
-        transform: rotate(90deg);
-        transform-origin: bottom left;
-        position: absolute;
-        top: -100vw;
-        left: 0;
-        width: 100vh;
-        height: 100vw;
-        overflow: hidden;
-    }
-}
-
 body.fullscreen-mode .screen {
     flex-direction: column;
     padding: 8px;
@@ -406,6 +393,7 @@ body.fullscreen-mode .game-header {
     padding: 8px;
     position: relative;
     flex-wrap: nowrap;
+    flex-direction: row;
 }
 
 body.fullscreen-mode .timer-display {
@@ -697,36 +685,39 @@ body.fullscreen-mode .astronaut-score {
 @media (max-width: 768px) and (orientation: landscape) {
     body.fullscreen-mode .game-header {
         height: 60px;
-        gap: 6px;
+        gap: 4px;
         padding: 4px;
+        flex-direction: row !important;
+        flex-wrap: nowrap !important;
     }
     
     body.fullscreen-mode .timer-display {
-        font-size: 20px;
-        padding: 8px 12px;
+        font-size: 18px;
+        padding: 6px 10px;
         height: 48px;
-        min-width: 80px;
+        min-width: 70px;
     }
     
     body.fullscreen-mode .control-btn {
         width: 48px;
         height: 48px;
-        font-size: 18px;
+        font-size: 16px;
     }
     
     body.fullscreen-mode .game-title {
         height: 48px;
-        margin: 0 8px;
+        margin: 0 4px;
+        flex: 1;
     }
     
     body.fullscreen-mode .game-title .title-line-1 {
-        font-size: 16px;
+        font-size: 14px;
         letter-spacing: 1px;
     }
     
     body.fullscreen-mode .game-title .title-line-2 {
-        font-size: 12px;
-        letter-spacing: 1px;
+        font-size: 10px;
+        letter-spacing: 0.5px;
         margin-top: 1px;
     }
     
@@ -737,65 +728,9 @@ body.fullscreen-mode .astronaut-score {
     }
     
     body.fullscreen-mode .concept-display {
-        font-size: 32px;
-        padding: 16px;
-        min-height: 80px;
-    }
-    
-    body.fullscreen-mode .alien-tile,
-    body.fullscreen-mode .human-tile {
-        min-width: 80px;
-        height: 48px;
-        font-size: 18px;
-        padding: 8px 12px;
-    }
-    
-    body.fullscreen-mode .astronaut-score {
-        width: 56px;
-        height: 56px;
-        font-size: 20px;
-    }
-}
-
-@media (max-width: 480px) {
-    body.fullscreen-mode .game-header {
-        height: 50px;
-        gap: 4px;
-        padding: 2px;
-    }
-    
-    body.fullscreen-mode .timer-display {
-        font-size: 16px;
-        padding: 6px 8px;
-        height: 40px;
-        min-width: 60px;
-    }
-    
-    body.fullscreen-mode .control-btn {
-        width: 40px;
-        height: 40px;
-        font-size: 14px;
-    }
-    
-    body.fullscreen-mode .game-title {
-        height: 40px;
-        margin: 0 4px;
-    }
-    
-    body.fullscreen-mode .game-title .title-line-1 {
-        font-size: 14px;
-        letter-spacing: 0.5px;
-    }
-    
-    body.fullscreen-mode .game-title .title-line-2 {
-        font-size: 10px;
-        letter-spacing: 0.5px;
-    }
-    
-    body.fullscreen-mode .close-btn {
-        width: 40px;
-        height: 40px;
         font-size: 28px;
+        padding: 12px;
+        min-height: 70px;
     }
     
     body.fullscreen-mode .alien-tile,
@@ -804,6 +739,65 @@ body.fullscreen-mode .astronaut-score {
         height: 40px;
         font-size: 16px;
         padding: 6px 10px;
+    }
+    
+    body.fullscreen-mode .astronaut-score {
+        width: 50px;
+        height: 50px;
+        font-size: 18px;
+    }
+}
+
+@media (max-width: 480px) {
+    body.fullscreen-mode .game-header {
+        height: 50px;
+        gap: 3px;
+        padding: 2px;
+        flex-direction: row !important;
+        flex-wrap: nowrap !important;
+    }
+    
+    body.fullscreen-mode .timer-display {
+        font-size: 14px;
+        padding: 4px 6px;
+        height: 40px;
+        min-width: 50px;
+    }
+    
+    body.fullscreen-mode .control-btn {
+        width: 40px;
+        height: 40px;
+        font-size: 12px;
+    }
+    
+    body.fullscreen-mode .game-title {
+        height: 40px;
+        margin: 0 2px;
+        flex: 1;
+    }
+    
+    body.fullscreen-mode .game-title .title-line-1 {
+        font-size: 11px;
+        letter-spacing: 0.5px;
+    }
+    
+    body.fullscreen-mode .game-title .title-line-2 {
+        font-size: 8px;
+        letter-spacing: 0.3px;
+    }
+    
+    body.fullscreen-mode .close-btn {
+        width: 40px;
+        height: 40px;
+        font-size: 24px;
+    }
+    
+    body.fullscreen-mode .alien-tile,
+    body.fullscreen-mode .human-tile {
+        min-width: 60px;
+        height: 35px;
+        font-size: 14px;
+        padding: 4px 8px;
     }
 }
 
