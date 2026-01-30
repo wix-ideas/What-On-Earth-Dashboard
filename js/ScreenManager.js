@@ -146,12 +146,24 @@ export class ScreenManager {
             element.msRequestFullscreen();
         }
         
-        // For mobile browsers that don't support fullscreen API
-        // Apply additional CSS-based fullscreen styling
+        // Mobile-specific optimizations
         setTimeout(() => {
-            if (!this.isFullscreen()) {
-                // Fallback: scroll to hide address bar on mobile
-                window.scrollTo(0, 1);
+            // Force scroll to hide address bar
+            window.scrollTo(0, 1);
+            
+            // Set viewport for better mobile experience
+            const viewport = document.querySelector('meta[name=viewport]');
+            if (viewport) {
+                viewport.setAttribute('content', 'width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no, minimal-ui');
+            }
+            
+            // Lock orientation to landscape if possible
+            if (window.screen && window.screen.orientation) {
+                try {
+                    window.screen.orientation.lock('landscape');
+                } catch (e) {
+                    console.log('Orientation lock not supported');
+                }
             }
         }, 100);
     }

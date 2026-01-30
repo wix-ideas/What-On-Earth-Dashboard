@@ -343,6 +343,12 @@ function startGame() {
     }
 
     resetRound();
+    
+    // Trigger fullscreen when starting the game
+    if (screenManager) {
+        screenManager.enterFullscreen();
+    }
+    
     showScreen('game');
 }
 
