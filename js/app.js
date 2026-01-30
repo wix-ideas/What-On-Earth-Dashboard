@@ -68,6 +68,12 @@ function selectMode(modeKey) {
     state.currentRound = 1;
     state.currentCycle = 0;
     closeModeSelect();
+    
+    // Enter fullscreen when selecting a game mode
+    if (screenManager) {
+        screenManager.enterFullscreen();
+    }
+    
     showScreen('setup');
 
     const landscapeModes = ['woe', 'skeleton', 'encounters', 'space'];

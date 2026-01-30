@@ -51,6 +51,7 @@ html, body {
 
 #app {
     height: 100vh;
+    height: 100dvh;
     width: 100%;
     position: relative;
     overflow: hidden;
@@ -82,6 +83,7 @@ html, body {
     display: none;
     position: relative;
     height: 100%;
+    min-height: 100dvh;
     width: 100%;
     flex-direction: column;
     gap: 10px;
@@ -403,13 +405,13 @@ body.fullscreen-mode .screen {
 body.fullscreen-mode .game-header {
     flex-direction: row;
     width: 100%;
-    height: auto;
+    height: 80px;
     background: transparent;
     border: none;
     justify-content: flex-start;
     align-items: center;
-    gap: 8px;
-    padding: 0;
+    gap: 12px;
+    padding: 8px;
     position: relative;
 }
 
@@ -419,10 +421,14 @@ body.fullscreen-mode .timer-display {
     font-family: var(--font-title);
     font-size: 32px;
     font-weight: bold;
-    padding: 8px 16px;
-    border-radius: 8px;
+    padding: 16px 20px;
+    border-radius: 12px;
     border: 3px solid var(--dark);
-    min-width: auto;
+    min-width: 120px;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 body.fullscreen-mode .game-controls {
@@ -432,15 +438,15 @@ body.fullscreen-mode .game-controls {
 }
 
 body.fullscreen-mode .control-btn {
-    width: 48px;
-    height: 48px;
+    width: 64px;
+    height: 64px;
     background: var(--yellow);
     border: 3px solid var(--dark);
-    border-radius: 8px;
+    border-radius: 12px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 24px;
+    font-size: 28px;
     font-weight: 900;
     color: var(--dark);
     cursor: pointer;
@@ -449,15 +455,42 @@ body.fullscreen-mode .control-btn {
 body.fullscreen-mode .game-title {
     flex: 1;
     font-family: var(--font-title);
-    font-size: 18px;
+    font-size: 28px;
     font-weight: bold;
     color: var(--yellow);
     text-transform: uppercase;
-    letter-spacing: 1px;
+    letter-spacing: 2px;
     text-align: center;
     margin: 0 16px;
     writing-mode: initial;
     transform: none;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-shadow: 
+        -3px -3px 0 var(--dark),
+        3px -3px 0 var(--dark),
+        -3px 3px 0 var(--dark),
+        3px 3px 0 var(--dark),
+        0 -3px 0 var(--dark),
+        0 3px 0 var(--dark),
+        -3px 0 0 var(--dark),
+        3px 0 0 var(--dark);
+}
+
+body.fullscreen-mode .close-btn {
+    width: 64px;
+    height: 64px;
+    background: transparent;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 36px;
+    font-weight: 900;
+    color: var(--yellow);
+    cursor: pointer;
     text-shadow: 
         -2px -2px 0 var(--dark),
         2px -2px 0 var(--dark),
@@ -467,20 +500,6 @@ body.fullscreen-mode .game-title {
         0 2px 0 var(--dark),
         -2px 0 0 var(--dark),
         2px 0 0 var(--dark);
-}
-
-body.fullscreen-mode .close-btn {
-    width: 48px;
-    height: 48px;
-    background: transparent;
-    border: none;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 32px;
-    font-weight: 900;
-    color: var(--yellow);
-    cursor: pointer;
 }
 
 body.fullscreen-mode .board {
@@ -534,12 +553,12 @@ body.fullscreen-mode .alien-players {
     position: absolute;
     bottom: 16px;
     left: 16px;
-    right: 80px;
+    right: 96px;
     display: flex;
-    gap: 8px;
+    gap: 12px;
     flex-wrap: wrap;
     justify-content: flex-start;
-    max-height: 120px;
+    max-height: 140px;
     overflow-y: auto;
 }
 
@@ -547,9 +566,9 @@ body.fullscreen-mode .alien-tile {
     background: var(--green);
     border: 3px solid var(--dark);
     border-radius: 12px;
-    padding: 16px 20px;
-    min-width: 80px;
-    height: 60px;
+    padding: 16px 24px;
+    min-width: 120px;
+    height: 64px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -575,9 +594,9 @@ body.fullscreen-mode .human-tile {
     background: var(--blue);
     border: 3px solid var(--dark);
     border-radius: 12px;
-    padding: 16px 20px;
-    min-width: 80px;
-    height: 60px;
+    padding: 16px 24px;
+    min-width: 120px;
+    height: 64px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -603,8 +622,8 @@ body.fullscreen-mode .astronaut-score {
     position: absolute;
     bottom: 16px;
     right: 16px;
-    width: 64px;
-    height: 64px;
+    width: 80px;
+    height: 80px;
     background-image: url('https://static.wixstatic.com/media/1369e3_d8dd2f5c0d2d499fa414f3423d6b1bbd~mv2.png');
     background-size: contain;
     background-repeat: no-repeat;
@@ -613,7 +632,7 @@ body.fullscreen-mode .astronaut-score {
     align-items: center;
     justify-content: center;
     font-family: var(--font-title);
-    font-size: 24px;
+    font-size: 28px;
     font-weight: bold;
     color: var(--yellow);
     text-shadow: 
@@ -664,37 +683,45 @@ body.fullscreen-mode .astronaut-score {
     
     body.fullscreen-mode .alien-tile,
     body.fullscreen-mode .human-tile {
-        min-width: 70px;
-        height: 50px;
+        min-width: 100px;
+        height: 56px;
         font-size: 20px;
-        padding: 12px 16px;
+        padding: 12px 20px;
     }
     
     body.fullscreen-mode .timer-display {
         font-size: 28px;
-        padding: 6px 12px;
+        padding: 12px 16px;
+        height: 56px;
+        min-width: 100px;
     }
     
     body.fullscreen-mode .control-btn {
-        width: 40px;
-        height: 40px;
-        font-size: 20px;
+        width: 56px;
+        height: 56px;
+        font-size: 24px;
     }
     
     body.fullscreen-mode .close-btn {
-        width: 40px;
-        height: 40px;
-        font-size: 28px;
+        width: 56px;
+        height: 56px;
+        font-size: 32px;
     }
     
     body.fullscreen-mode .game-title {
-        font-size: 16px;
+        font-size: 24px;
+        height: 56px;
     }
     
     body.fullscreen-mode .astronaut-score {
-        width: 56px;
-        height: 56px;
-        font-size: 20px;
+        width: 72px;
+        height: 72px;
+        font-size: 24px;
+    }
+    
+    body.fullscreen-mode .game-header {
+        height: 72px;
+        gap: 8px;
     }
 }
 
@@ -737,6 +764,34 @@ body.fullscreen-mode .astronaut-score {
     .menu-btn {
         width: 56px;
         height: 56px;
+    }
+}
+
+@media (max-height: 600px) {
+    .screen {
+        min-height: 100vh;
+        min-height: 100dvh;
+        padding-bottom: calc(var(--padding) + 20px);
+    }
+    
+    .btn-primary {
+        margin-bottom: 20px;
+    }
+}
+
+@media (max-height: 500px) {
+    .screen {
+        gap: 8px;
+        padding: 8px;
+        padding-bottom: 24px;
+    }
+    
+    .header {
+        padding-top: 4px;
+    }
+    
+    .board {
+        padding: 8px;
     }
 }
 

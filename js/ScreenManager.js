@@ -66,12 +66,6 @@ export class ScreenManager {
         
         this.performTransition(this.currentScreen, screenName, data);
         
-        if (screenName === 'game') {
-            this.enterFullscreen();
-        } else if (this.currentScreen === 'game') {
-            this.exitFullscreen();
-        }
-        
         return true;
     }
     
