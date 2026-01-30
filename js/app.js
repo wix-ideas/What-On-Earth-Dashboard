@@ -238,10 +238,18 @@ function renderPlayers() {
                 <div class="player-icon"></div>
                 <input class="player-input" value="${p.initials}" maxlength="3" id="edit-${p.id}" />
                 <div class="row-tools">
-                    <button class="tool-btn delete" onclick="deletePlayer('${p.id}')">🗑</button>
-                    <button class="tool-btn" onclick="movePlayerUp('${p.id}')">▲</button>
-                    <button class="tool-btn" onclick="movePlayerDown('${p.id}')">▼</button>
-                    <button class="tool-btn" onclick="savePlayerEdit('${p.id}')">✓</button>
+                    <button class="tool-btn delete" onclick="deletePlayer('${p.id}')">
+                        <svg viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
+                    </button>
+                    <button class="tool-btn" onclick="movePlayerUp('${p.id}')">
+                        <svg viewBox="0 0 24 24"><path d="M7 14l5-5 5 5z"/></svg>
+                    </button>
+                    <button class="tool-btn" onclick="movePlayerDown('${p.id}')">
+                        <svg viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>
+                    </button>
+                    <button class="tool-btn" onclick="savePlayerEdit('${p.id}')">
+                        <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                    </button>
                 </div>
             `;
             setTimeout(() => {
@@ -255,10 +263,9 @@ function renderPlayers() {
             row.innerHTML = `
                 <div class="player-icon"></div>
                 <div class="player-name">${p.initials}</div>
-                <div class="row-tools">
-                    <button class="tool-btn delete" onclick="deletePlayer('${p.id}')">🗑</button>
-                    <button class="tool-btn" onclick="editPlayer('${p.id}')">✎</button>
-                </div>
+                <button class="edit-icon" onclick="editPlayer('${p.id}')">
+                    <svg viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
+                </button>
             `;
         }
 
