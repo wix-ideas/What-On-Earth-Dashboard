@@ -117,6 +117,7 @@ export class ScreenManager {
     enterFullscreen() {
         document.body.classList.add('fullscreen-mode');
         
+        // Try the Fullscreen API (works on desktop and some mobile browsers)
         const element = document.documentElement;
         
         if (element.requestFullscreen) {
@@ -129,6 +130,7 @@ export class ScreenManager {
             element.msRequestFullscreen();
         }
         
+        // Force landscape orientation if supported
         if (window.screen && window.screen.orientation) {
             try {
                 window.screen.orientation.lock('landscape');
@@ -137,14 +139,21 @@ export class ScreenManager {
             }
         }
         
+        // Mobile-specific optimizations
         setTimeout(() => {
+            // Scroll to hide address bar on mobile
             window.scrollTo(0, 1);
+            
+            // Set viewport for mobile fullscreen experience
+            const viewport = document.querySelector('meta[name=viewport]');
+            if (viewport) {
+                viewport.setAttribute('content', 'width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no, minimal-ui');
+            }
+            
+            // Hide mobile browser UI by making content taller than viewport
+            document.body.style.minHeight = '100vh';
+            document.body.style.minHeight = '100dvh';
         }, 100);
-        
-        const viewport = document.querySelector('meta[name=viewport]');
-        if (viewport) {
-            viewport.setAttribute('content', 'width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no, minimal-ui');
-        }
     }
     
     exitFullscreen() {

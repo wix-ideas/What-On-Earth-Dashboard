@@ -60,17 +60,6 @@ function showScreen(screenId) {
 
 function goToLanding() {
     document.getElementById('modeSelectModal').classList.add('active');
-    
-    // Show install prompt for mobile users not in standalone mode
-    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-    const isStandalone = window.matchMedia('(display-mode: standalone)').matches || 
-                        window.navigator.standalone === true;
-    
-    if (isMobile && !isStandalone) {
-        document.getElementById('mobileInstallPrompt').style.display = 'block';
-    } else {
-        document.getElementById('mobileInstallPrompt').style.display = 'none';
-    }
 }
 
 function selectMode(modeKey) {
