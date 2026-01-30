@@ -108,9 +108,9 @@
             <div class="game-header">
                 <div class="timer-display" id="timerDisplay">2:00</div>
                 <div class="game-controls">
-                    <button class="control-btn" onclick="togglePause()">||</button>
-                    <button class="control-btn" onclick="previousConcept()">◄</button>
-                    <button class="control-btn" onclick="skipConcept()">►</button>
+                    <button class="control-btn" onclick="togglePause()" title="Play/Pause">▶</button>
+                    <button class="control-btn" onclick="previousConcept()" title="Previous">◄</button>
+                    <button class="control-btn" onclick="skipConcept()" title="Skip">►</button>
                 </div>
                 <div id="gameTitleText" class="game-title">
                     <div class="title-line-1">WHAT ON EARTH</div>
@@ -121,12 +121,12 @@
 
             <div class="board">
                 <div id="conceptDisplay" class="concept-display" onclick="revealConcept()">
-                    EARTH CONCEPT
+                    TAP TO REVEAL
                 </div>
 
                 <div id="alienPlayers" class="alien-players"></div>
                 
-                <div class="astronaut-score" id="astronautScore">1</div>
+                <div class="astronaut-score" id="astronautScore">0</div>
             </div>
 
             <button id="nextRoundBtn" class="btn btn-primary" style="display: none;" onclick="goToInterRound()">NEXT ROUND</button>

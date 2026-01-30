@@ -23,7 +23,12 @@ const state = {
     roundScores: {},
     roundTotal: 0,
     seenConcepts: [],
-    editMode: false
+    editMode: false,
+    timerStartTime: null,
+    timerPausedTime: 0,
+    lastMilestone: 0,
+    audioEnabled: true,
+    audioElements: {}
 };
 
 const concepts = {
@@ -367,14 +372,20 @@ function resetRound() {
     state.currentConcept = '';
     state.roundTotal = 0;
     state.roundScores = {};
+    state.timerStartTime = null;
+    state.timerPausedTime = 0;
+    state.lastMilestone = 0;
 
     state.players.forEach(p => {
         state.roundScores[p.id] = 0;
     });
 
     document.getElementById('conceptDisplay').textContent = 'TAP TO REVEAL';
+    document.getElementById('conceptDisplay').style.cursor = 'pointer';
     document.getElementById('nextRoundBtn').style.display = 'none';
-
+    
+    updateTimerDisplay();
+    updateRoundScoreDisplay();
     renderAlienPlayers();
 }
 
@@ -419,7 +430,16 @@ function revealConcept() {
     state.currentConcept = getRandomConcept();
     state.conceptRevealed = true;
 
-    document.getElementById('conceptDisplay').textContent = state.currentConcept;
+    const conceptDisplay = document.getElementById('conceptDisplay');
+    conceptDisplay.textContent = state.currentConcept;
+    conceptDisplay.style.cursor = 'default';
+    
+    // Show start button on pause button
+    const pauseBtn = document.querySelector('.control-btn');
+    if (pauseBtn) {
+        pauseBtn.textContent = '▶';
+        pauseBtn.style.background = 'var(--green)';
+    }
 }
 
 function skipConcept() {
@@ -444,49 +464,201 @@ function togglePause() {
     } else {
         startTimer();
     }
+    
+    updatePauseButton();
+}
+
+function updatePauseButton() {
+    const pauseBtn = document.querySelector('.control-btn');
+    if (!pauseBtn) return;
+    
+    if (state.timerRunning) {
+        pauseBtn.textContent = '||';
+        pauseBtn.style.background = 'var(--yellow)';
+    } else {
+        pauseBtn.textContent = '▶';
+        pauseBtn.style.background = 'var(--green)';
+    }
 }
 
 function startTimer() {
+    if (!state.timerStartTime) {
+        state.timerStartTime = Date.now();
+    } else {
+        // Resume from pause
+        state.timerStartTime = Date.now() - state.timerPausedTime;
+    }
+    
     state.timerRunning = true;
+    
     state.timerInterval = setInterval(() => {
-        state.timerSeconds--;
+        const elapsed = Math.floor((Date.now() - state.timerStartTime) / 1000);
+        state.timerSeconds = 120 - elapsed;
+        
+        updateTimerDisplay();
+        checkTimerAudioCues();
 
         if (state.timerSeconds <= 0) {
+            state.timerSeconds = 0;
             endRound();
         }
-    }, 1000);
+    }, 100); // Update every 100ms for smooth display
 }
 
 function pauseTimer() {
     state.timerRunning = false;
+    state.timerPausedTime = Date.now() - state.timerStartTime;
+    
     if (state.timerInterval) {
         clearInterval(state.timerInterval);
         state.timerInterval = null;
     }
 }
 
+function updateTimerDisplay() {
+    const minutes = Math.floor(state.timerSeconds / 60);
+    const seconds = state.timerSeconds % 60;
+    const display = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+    
+    const timerEl = document.getElementById('timerDisplay');
+    if (timerEl) {
+        timerEl.textContent = display;
+        
+        // Color changes based on time remaining
+        if (state.timerSeconds <= 10) {
+            timerEl.style.background = 'var(--red)';
+            timerEl.style.color = 'var(--cream)';
+        } else if (state.timerSeconds <= 30) {
+            timerEl.style.background = 'var(--yellow)';
+            timerEl.style.color = 'var(--dark)';
+        } else {
+            timerEl.style.background = 'var(--yellow)';
+            timerEl.style.color = 'var(--dark)';
+        }
+    }
+}
+
+function checkTimerAudioCues() {
+    const t = state.timerSeconds;
+    
+    // Play audio cues at specific times (only once per second)
+    if (t === 60) playAudio('warning60');
+    else if (t === 30) playAudio('warning30');
+    else if (t === 10) playAudio('warning10');
+    else if (t === 5) playAudio('countdown5');
+    else if (t === 4) playAudio('countdown4');
+    else if (t === 3) playAudio('countdown3');
+    else if (t === 2) playAudio('countdown2');
+    else if (t === 1) playAudio('countdown1');
+}
+
 function endRound() {
     pauseTimer();
+    playAudio('end');
+    
+    updateTimerDisplay();
+    
+    const conceptDisplay = document.getElementById('conceptDisplay');
+    if (conceptDisplay) {
+        conceptDisplay.textContent = 'ROUND OVER';
+        conceptDisplay.style.cursor = 'default';
+    }
+    
     document.getElementById('nextRoundBtn').style.display = 'flex';
 }
 
 function scoreAlien(playerId) {
-    if (!state.conceptRevealed) return;
+    if (!state.conceptRevealed || !state.timerRunning) return;
 
     const player = state.players.find(p => p.id === playerId);
     if (!player) return;
 
+    // Award point to alien
     state.roundScores[playerId]++;
     player.score++;
     state.roundTotal++;
 
-    const scoreEl = document.getElementById(`alien-score-${playerId}`);
-    if (scoreEl) scoreEl.textContent = state.roundScores[playerId];
+    // Show +1 animation
+    showScoreAnimation(playerId, '+1', 'var(--green)');
 
+    // Check for human milestone bonuses
     checkHumanMilestones();
 
+    // Update displays
+    updateRoundScoreDisplay();
+    renderAlienPlayers();
+
+    // Load next concept
     state.currentConcept = getRandomConcept();
     document.getElementById('conceptDisplay').textContent = state.currentConcept;
+}
+
+function showScoreAnimation(playerId, text, color) {
+    // Find the player tile
+    const tiles = document.querySelectorAll('.alien-tile, .human-tile');
+    tiles.forEach(tile => {
+        if (tile.textContent.includes(state.players.find(p => p.id === playerId)?.initials)) {
+            const animation = document.createElement('div');
+            animation.textContent = text;
+            animation.style.position = 'absolute';
+            animation.style.color = color;
+            animation.style.fontFamily = 'var(--font-title)';
+            animation.style.fontSize = '24px';
+            animation.style.fontWeight = 'bold';
+            animation.style.pointerEvents = 'none';
+            animation.style.animation = 'floatUp 1s ease-out forwards';
+            
+            tile.style.position = 'relative';
+            tile.appendChild(animation);
+            
+            setTimeout(() => animation.remove(), 1000);
+        }
+    });
+}
+
+function checkHumanMilestones() {
+    const alienCount = getAlienCount();
+    const humanPlayers = state.players.slice(alienCount);
+    
+    // Milestone logic: 3 → +1, 5 → +1, then 6, 7, 8, 9... → +1 each
+    const milestones = [3, 5];
+    for (let i = 6; i <= 50; i++) {
+        milestones.push(i);
+    }
+    
+    // Check if we just hit a milestone
+    if (milestones.includes(state.roundTotal) && state.roundTotal > state.lastMilestone) {
+        state.lastMilestone = state.roundTotal;
+        
+        // Award bonus point to all humans
+        humanPlayers.forEach(h => {
+            h.score++;
+            showScoreAnimation(h.id, '+1', 'var(--yellow)');
+        });
+        
+        // Show gold helmet animation
+        showMilestoneAnimation();
+    }
+}
+
+function showMilestoneAnimation() {
+    const astronautScore = document.getElementById('astronautScore');
+    if (astronautScore) {
+        astronautScore.style.filter = 'brightness(1.5) saturate(1.5)';
+        astronautScore.style.transform = 'scale(1.2)';
+        
+        setTimeout(() => {
+            astronautScore.style.filter = '';
+            astronautScore.style.transform = '';
+        }, 500);
+    }
+}
+
+function updateRoundScoreDisplay() {
+    const astronautScore = document.getElementById('astronautScore');
+    if (astronautScore) {
+        astronautScore.textContent = state.roundTotal;
+    }
 }
 
 function scoreHuman(playerId) {
@@ -598,6 +770,40 @@ function continuePlaying() {
     showScreen('game');
 }
 
+function initializeAudio() {
+    // Create audio elements for timer cues
+    state.audioElements = {
+        warning60: createAudioElement('https://cdn.jsdelivr.net/gh/wix-ideas/woe-dashboard@main/audio/beep.mp3'),
+        warning30: createAudioElement('https://cdn.jsdelivr.net/gh/wix-ideas/woe-dashboard@main/audio/beep.mp3'),
+        warning10: createAudioElement('https://cdn.jsdelivr.net/gh/wix-ideas/woe-dashboard@main/audio/beep.mp3'),
+        countdown5: createAudioElement('https://cdn.jsdelivr.net/gh/wix-ideas/woe-dashboard@main/audio/beep.mp3'),
+        countdown4: createAudioElement('https://cdn.jsdelivr.net/gh/wix-ideas/woe-dashboard@main/audio/beep.mp3'),
+        countdown3: createAudioElement('https://cdn.jsdelivr.net/gh/wix-ideas/woe-dashboard@main/audio/beep.mp3'),
+        countdown2: createAudioElement('https://cdn.jsdelivr.net/gh/wix-ideas/woe-dashboard@main/audio/beep.mp3'),
+        countdown1: createAudioElement('https://cdn.jsdelivr.net/gh/wix-ideas/woe-dashboard@main/audio/beep.mp3'),
+        end: createAudioElement('https://cdn.jsdelivr.net/gh/wix-ideas/woe-dashboard@main/audio/end.mp3')
+    };
+}
+
+function createAudioElement(src) {
+    const audio = new Audio(src);
+    audio.preload = 'auto';
+    audio.volume = 0.7;
+    return audio;
+}
+
+function playAudio(key) {
+    if (!state.audioEnabled || !state.audioElements[key]) return;
+    
+    try {
+        const audio = state.audioElements[key];
+        audio.currentTime = 0;
+        audio.play().catch(err => console.log('Audio play failed:', err));
+    } catch (err) {
+        console.log('Audio error:', err);
+    }
+}
+
 window.addEventListener('load', () => {
     screenManager = new ScreenManager();
     gameStateManager = new GameStateManager();
@@ -605,6 +811,7 @@ window.addEventListener('load', () => {
     window.screenManager = screenManager;
     window.gameStateManager = gameStateManager;
     
+    initializeAudio();
     updateStartButton();
     showScreen('setup');
     updateNSFWUI();

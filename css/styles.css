@@ -525,6 +525,11 @@ body.fullscreen-mode .control-btn {
     color: var(--dark);
     cursor: pointer;
     font-family: var(--font-title);
+    transition: background 0.2s ease, transform 0.1s ease;
+}
+
+body.fullscreen-mode .control-btn:active {
+    transform: scale(0.95);
 }
 
 body.fullscreen-mode .game-title {
@@ -687,6 +692,13 @@ body.fullscreen-mode .alien-tile {
         0 2px 0 var(--dark),
         -2px 0 0 var(--dark),
         2px 0 0 var(--dark);
+    transition: transform 0.1s ease, background 0.2s ease;
+    position: relative;
+}
+
+body.fullscreen-mode .alien-tile:active {
+    transform: scale(0.95);
+    background: var(--yellow);
 }
 
 body.fullscreen-mode .human-tile {
@@ -715,6 +727,13 @@ body.fullscreen-mode .human-tile {
         0 2px 0 var(--dark),
         -2px 0 0 var(--dark),
         2px 0 0 var(--dark);
+    transition: transform 0.1s ease, background 0.2s ease;
+    position: relative;
+}
+
+body.fullscreen-mode .human-tile:active {
+    transform: scale(0.95);
+    background: var(--yellow);
 }
 
 body.fullscreen-mode .astronaut-score {
@@ -743,6 +762,7 @@ body.fullscreen-mode .astronaut-score {
         0 2px 0 var(--dark),
         -2px 0 0 var(--dark),
         2px 0 0 var(--dark);
+    transition: filter 0.3s ease, transform 0.3s ease;
 }
 
 @media (max-width: 420px) {
@@ -889,6 +909,17 @@ body.fullscreen-mode .astronaut-score {
         height: 35px;
         font-size: 14px;
         padding: 4px 8px;
+    }
+}
+
+@keyframes floatUp {
+    0% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    100% {
+        opacity: 0;
+        transform: translateY(-40px);
     }
 }
 
