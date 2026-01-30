@@ -235,8 +235,10 @@ function updateStartButton() {
 
     if (state.players.length >= minPlayers) {
         btn.classList.remove('disabled');
+        btn.style.display = 'flex';
     } else {
         btn.classList.add('disabled');
+        btn.style.display = 'flex';
     }
 }
 
@@ -482,6 +484,7 @@ window.addEventListener('load', () => {
     window.screenManager = screenManager;
     window.gameStateManager = gameStateManager;
     
+    updateStartButton();
     goToLanding();
     updateNSFWUI();
 });
