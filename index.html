@@ -52,6 +52,15 @@
             <div class="board">
                 <div class="players-wrap">
                     <div id="playersList" class="players-list"></div>
+                    <div id="addPlayerRow" class="player-row" style="display: none;">
+                        <div class="player-icon"></div>
+                        <input id="addPlayerInput" class="player-input" maxlength="3" placeholder="___" 
+                               onkeydown="handleAddPlayerKeydown(event)" />
+                        <div class="row-tools">
+                            <button class="tool-btn delete" onclick="cancelAddPlayer()">×</button>
+                            <button class="tool-btn" onclick="confirmAddPlayer()">✓</button>
+                        </div>
+                    </div>
                 </div>
 
                 <button id="wideAddBtn" class="btn btn-tertiary" onclick="showAddMode()">+</button>

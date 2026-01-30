@@ -157,25 +157,39 @@ function getAlienCount() {
 }
 
 function showAddMode() {
-    const initials = prompt('Enter player initials (max 3 characters):');
-    if (!initials) return;
+    document.getElementById('wideAddBtn').style.display = 'none';
+    document.getElementById('addPlayerRow').style.display = 'flex';
+    document.getElementById('addPlayerInput').focus();
+}
 
-    const normalized = normalizeInitials(initials);
-    if (!normalized) return;
-    if (state.players.some(p => p.initials === normalized)) {
+function cancelAddPlayer() {
+    document.getElementById('wideAddBtn').style.display = 'flex';
+    document.getElementById('addPlayerRow').style.display = 'none';
+    document.getElementById('addPlayerInput').value = '';
+}
+
+function confirmAddPlayer() {
+    const input = document.getElementById('addPlayerInput');
+    const initials = normalizeInitials(input.value);
+
+    if (!initials) return;
+    if (state.players.some(p => p.initials === initials)) {
         alert('Player with these initials already exists!');
         return;
     }
 
     state.players.push({
         id: Date.now() + '_' + Math.random().toString(36).slice(2),
-        initials: normalized,
-        score: 0
+        initials: initials,
+        score: 0,
+        editing: false
     });
 
+    input.value = '';
     assignTeams();
     renderPlayers();
     updateStartButton();
+    cancelAddPlayer();
 }
 
 function assignTeams() {
@@ -217,15 +231,91 @@ function renderPlayers() {
         const row = document.createElement('div');
         row.className = 'player-row' + (isAlien ? ' alien' : '') + teamClass;
 
-        row.innerHTML = `
-            <div class="player-name">${p.initials}</div>
-            <div class="row-tools">
-                <button class="tool-btn" onclick="deletePlayer('${p.id}')">×</button>
-            </div>
-        `;
+        if (p.editing) {
+            row.innerHTML = `
+                <div class="player-icon"></div>
+                <input class="player-input" value="${p.initials}" maxlength="3" id="edit-${p.id}" />
+                <div class="row-tools">
+                    <button class="tool-btn delete" onclick="deletePlayer('${p.id}')">×</button>
+                    <button class="tool-btn" onclick="movePlayerUp('${p.id}')">▲</button>
+                    <button class="tool-btn" onclick="movePlayerDown('${p.id}')">▼</button>
+                    <button class="tool-btn" onclick="savePlayerEdit('${p.id}')">✓</button>
+                </div>
+            `;
+            setTimeout(() => {
+                const input = document.getElementById(`edit-${p.id}`);
+                if (input) {
+                    input.focus();
+                    input.select();
+                }
+            }, 0);
+        } else {
+            row.innerHTML = `
+                <div class="player-icon"></div>
+                <div class="player-name">${p.initials}</div>
+                <div class="row-tools">
+                    <button class="tool-btn delete" onclick="deletePlayer('${p.id}')">×</button>
+                    <button class="tool-btn" onclick="editPlayer('${p.id}')">✏</button>
+                </div>
+            `;
+        }
 
         list.appendChild(row);
     });
+}
+
+function editPlayer(id) {
+    state.players.forEach(p => p.editing = false);
+    const player = state.players.find(p => p.id === id);
+    if (player) {
+        player.editing = true;
+        renderPlayers();
+    }
+}
+
+function savePlayerEdit(id) {
+    const input = document.getElementById(`edit-${id}`);
+    if (!input) return;
+
+    const initials = normalizeInitials(input.value);
+    if (!initials) return;
+    if (state.players.some(p => p.id !== id && p.initials === initials)) {
+        alert('Player with these initials already exists!');
+        return;
+    }
+
+    const player = state.players.find(p => p.id === id);
+    if (player) {
+        player.initials = initials;
+        player.editing = false;
+        renderPlayers();
+    }
+}
+
+function movePlayerUp(id) {
+    const idx = state.players.findIndex(p => p.id === id);
+    if (idx > 0) {
+        [state.players[idx], state.players[idx - 1]] = [state.players[idx - 1], state.players[idx]];
+        assignTeams();
+        renderPlayers();
+    }
+}
+
+function movePlayerDown(id) {
+    const idx = state.players.findIndex(p => p.id === id);
+    if (idx < state.players.length - 1) {
+        [state.players[idx], state.players[idx + 1]] = [state.players[idx + 1], state.players[idx]];
+        assignTeams();
+        renderPlayers();
+    }
+}
+
+function handleAddPlayerKeydown(e) {
+    if (e.key === 'Enter') {
+        confirmAddPlayer();
+    } else if (e.key === 'Escape') {
+        cancelAddPlayer();
+    }
 }
 
 function updateStartButton() {
@@ -499,6 +589,12 @@ window.confirmExit = confirmExit;
 window.exitGame = exitGame;
 window.toggleNSFW = toggleNSFW;
 window.showAddMode = showAddMode;
+window.cancelAddPlayer = cancelAddPlayer;
+window.confirmAddPlayer = confirmAddPlayer;
+window.editPlayer = editPlayer;
+window.savePlayerEdit = savePlayerEdit;
+window.movePlayerUp = movePlayerUp;
+window.movePlayerDown = movePlayerDown;
 window.deletePlayer = deletePlayer;
 window.startGame = startGame;
 window.revealConcept = revealConcept;
@@ -511,3 +607,4 @@ window.toggleEditMode = toggleEditMode;
 window.nextRound = nextRound;
 window.continuePlaying = continuePlaying;
 window.goToLanding = goToLanding;
+window.handleAddPlayerKeydown = handleAddPlayerKeydown;
