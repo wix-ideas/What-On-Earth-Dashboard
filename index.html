@@ -60,31 +60,30 @@
                 <div class="players-wrap">
                     <div id="playersList" class="players-list"></div>
                     <div id="addPlayerRow" class="player-row" style="display: none;">
-                        <div class="player-icon"></div>
                         <input id="addPlayerInput" class="player-input" maxlength="3" placeholder="___" 
                                onkeydown="handleAddPlayerKeydown(event)" />
                         <div class="row-tools">
-                            <button class="tool-btn delete" onclick="cancelAddPlayer()">×</button>
+                            <button class="tool-btn delete" onclick="cancelAddPlayer()">🗑</button>
+                            <button class="tool-btn" onclick="movePlayerUp('temp')">▲</button>
+                            <button class="tool-btn" onclick="movePlayerDown('temp')">▼</button>
                             <button class="tool-btn" onclick="confirmAddPlayer()">✓</button>
                         </div>
                     </div>
                 </div>
 
-                <button id="wideAddBtn" class="btn btn-tertiary" onclick="showAddMode()">+</button>
+                <button id="wideAddBtn" class="btn-add" onclick="showAddMode()">+</button>
+            </div>
 
-                <div class="spacer"></div>
-
+            <div class="bottom-controls">
                 <div class="nsfw-row">
-                    <div id="nsfwPill" class="nsfw-pill">
-                        <div class="nsfw-label">NSFW</div>
-                    </div>
+                    <div class="nsfw-label">NSFW</div>
                     <button id="nsfwSwitch" class="nsfw-switch" onclick="toggleNSFW()">
                         <div class="nsfw-knob"></div>
                     </button>
                 </div>
-            </div>
 
-            <button id="startBtn" class="btn btn-primary" onclick="startGame()">START GAME</button>
+                <button id="startBtn" class="btn btn-primary" onclick="startGame()">START GAME</button>
+            </div>
         </div>
 
         <div id="gameScreen" class="screen">

@@ -137,14 +137,11 @@ function toggleNSFW() {
 }
 
 function updateNSFWUI() {
-    const pill = document.getElementById('nsfwPill');
     const sw = document.getElementById('nsfwSwitch');
 
     if (state.nsfwEnabled) {
-        pill.classList.add('active');
         sw.classList.add('active');
     } else {
-        pill.classList.remove('active');
         sw.classList.remove('active');
     }
 }
@@ -255,7 +252,7 @@ function renderPlayers() {
                 <div class="player-icon"></div>
                 <div class="player-name">${p.initials}</div>
                 <div class="row-tools">
-                    <button class="tool-btn delete" onclick="deletePlayer('${p.id}')">×</button>
+                    <button class="tool-btn delete" onclick="deletePlayer('${p.id}')">🗑</button>
                     <button class="tool-btn" onclick="editPlayer('${p.id}')">✏</button>
                 </div>
             `;
