@@ -82,21 +82,24 @@
 
         <div id="gameScreen" class="screen">
             <div class="game-header">
-                <button class="btn btn-tertiary" onclick="togglePause()">⏸</button>
-                <button class="btn btn-tertiary" onclick="previousConcept()">◀</button>
-                <button class="btn btn-tertiary" onclick="skipConcept()">▶</button>
-                <div id="gameTitleText" class="game-title">WHAT ON EARTH</div>
-                <button id="exitGameBtn" class="btn btn-tertiary" onclick="exitGame()">✕</button>
+                <div class="timer-display" id="timerDisplay">2:00</div>
+                <div class="game-controls">
+                    <button class="control-btn" onclick="togglePause()">⏸</button>
+                    <button class="control-btn" onclick="previousConcept()">◀</button>
+                    <button class="control-btn" onclick="skipConcept()">▶</button>
+                </div>
+                <div id="gameTitleText" class="game-title">WHAT ON EARTH<br>ARE YOU TALKING ABOUT?</div>
+                <button id="exitGameBtn" class="close-btn" onclick="exitGame()">✕</button>
             </div>
 
             <div class="board">
                 <div id="conceptDisplay" class="concept-display" onclick="revealConcept()">
-                    TAP TO REVEAL
+                    EARTH CONCEPT
                 </div>
 
-                <div class="spacer"></div>
-
                 <div id="alienPlayers" class="alien-players"></div>
+                
+                <div class="astronaut-score" id="astronautScore">1</div>
             </div>
 
             <button id="nextRoundBtn" class="btn btn-primary" style="display: none;" onclick="goToInterRound()">NEXT ROUND</button>

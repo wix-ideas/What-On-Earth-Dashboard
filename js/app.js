@@ -371,15 +371,9 @@ function renderAlienPlayers() {
 
     state.players.slice(0, alienCount).forEach((p, idx) => {
         const tile = document.createElement('div');
-        let teamClass = p.team ? (' ' + p.team) : '';
-        tile.className = 'alien-tile' + teamClass;
+        tile.className = 'alien-tile';
         tile.onclick = () => scoreAlien(p.id);
-
-        tile.innerHTML = `
-            <div class="alien-initials">${p.initials}</div>
-            <div class="alien-score" id="alien-score-${p.id}">0</div>
-        `;
-
+        tile.textContent = p.initials;
         container.appendChild(tile);
     });
 }
