@@ -66,6 +66,12 @@ export class ScreenManager {
         
         this.performTransition(this.currentScreen, screenName, data);
         
+        if (screenName === 'game') {
+            this.enterFullscreen();
+        } else if (this.currentScreen === 'game') {
+            this.exitFullscreen();
+        }
+        
         return true;
     }
     
@@ -109,9 +115,9 @@ export class ScreenManager {
     }
     
     enterFullscreen() {
-        const element = document.documentElement;
-        
         document.body.classList.add('fullscreen-mode');
+        
+        const element = document.documentElement;
         
         if (element.requestFullscreen) {
             element.requestFullscreen({ navigationUI: "hide" }).catch(() => {
@@ -133,12 +139,6 @@ export class ScreenManager {
         
         setTimeout(() => {
             window.scrollTo(0, 1);
-            document.body.style.position = 'fixed';
-            document.body.style.top = '0';
-            document.body.style.left = '0';
-            document.body.style.width = '100vw';
-            document.body.style.height = '100vh';
-            document.body.style.overflow = 'hidden';
         }, 100);
         
         const viewport = document.querySelector('meta[name=viewport]');
@@ -148,6 +148,8 @@ export class ScreenManager {
     }
     
     exitFullscreen() {
+        document.body.classList.remove('fullscreen-mode');
+        
         if (document.exitFullscreen) {
             document.exitFullscreen();
         } else if (document.webkitExitFullscreen) {
@@ -155,14 +157,6 @@ export class ScreenManager {
         } else if (document.msExitFullscreen) {
             document.msExitFullscreen();
         }
-        
-        document.body.classList.remove('fullscreen-mode');
-        document.body.style.position = '';
-        document.body.style.top = '';
-        document.body.style.left = '';
-        document.body.style.width = '';
-        document.body.style.height = '';
-        document.body.style.overflow = '';
         
         const viewport = document.querySelector('meta[name=viewport]');
         if (viewport) {

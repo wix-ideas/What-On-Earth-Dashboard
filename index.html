@@ -5,7 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="What On Earth">
     <meta name="mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#1C313B">
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="https://static.wixstatic.com/media/1369e3_d8dd2f5c0d2d499fa414f3423d6b1bbd~mv2.png">
     <title>What On Earth Are You Talking About?</title>
     <link rel="stylesheet" href="css/styles.css">
 </head>
@@ -17,6 +21,9 @@
         <div id="modeSelectModal" class="modal">
             <div class="modal-content">
                 <div class="game-mode-list">
+                    <div id="mobileInstallPrompt" style="display: none; background: rgba(255, 189, 0, 0.9); color: #1C313B; padding: 16px; border-radius: 12px; margin-bottom: 20px; text-align: center; font-family: var(--font-ui); font-size: 14px; font-weight: bold;">
+                        📱 For best mobile experience: Tap Share → Add to Home Screen, then open from your home screen for fullscreen mode!
+                    </div>
                     <button class="game-mode-btn" onclick="selectMode('woe')">What On Earth</button>
                     <button class="game-mode-btn" onclick="selectMode('skeleton')">Skeleton Crew [2p–3p]</button>
                     <button class="game-mode-btn" onclick="selectMode('encounters')">Close Encounters</button>
@@ -179,5 +186,17 @@
     </div>
 
     <script type="module" src="js/app.js"></script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function() {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(function(registration) {
+                        console.log('ServiceWorker registration successful');
+                    }, function(err) {
+                        console.log('ServiceWorker registration failed: ', err);
+                    });
+            });
+        }
+    </script>
 </body>
 </html>
