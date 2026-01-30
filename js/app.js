@@ -687,20 +687,6 @@ function scoreHuman(playerId) {
     document.getElementById('conceptDisplay').textContent = state.currentConcept;
 }
 
-function checkHumanMilestones() {
-    const alienCount = getAlienCount();
-    const humanPlayers = state.players.slice(alienCount);
-
-    const milestones = [3, 5];
-    for (let i = 6; i <= 50; i++) {
-        milestones.push(i);
-    }
-
-    if (milestones.includes(state.roundTotal)) {
-        humanPlayers.forEach(h => h.score++);
-    }
-}
-
 function goToInterRound() {
     if (state.players.length > 0) {
         const topPlayer = state.players.shift();
