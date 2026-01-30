@@ -29,12 +29,25 @@ export class ScreenManager {
     }
     
     setupFullscreenHandlers() {
+        // Cross-browser fullscreen change events
         document.addEventListener('fullscreenchange', () => {
             this.handleFullscreenChange();
         });
         
+        document.addEventListener('webkitfullscreenchange', () => {
+            this.handleFullscreenChange();
+        });
+        
+        document.addEventListener('mozfullscreenchange', () => {
+            this.handleFullscreenChange();
+        });
+        
+        document.addEventListener('MSFullscreenChange', () => {
+            this.handleFullscreenChange();
+        });
+        
         document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && document.fullscreenElement) {
+            if (e.key === 'Escape' && this.isFullscreen()) {
                 this.exitFullscreen();
             }
         });
@@ -117,36 +130,52 @@ export class ScreenManager {
     enterFullscreen() {
         document.body.classList.add('fullscreen-mode');
         
-        // Try the Fullscreen API (works on desktop and some mobile browsers)
+        // Cross-browser fullscreen implementation
         const element = document.documentElement;
         
         if (element.requestFullscreen) {
-            element.requestFullscreen().catch(() => {
-                console.log('Fullscreen API not supported, using CSS fallback');
-            });
+            element.requestFullscreen();
+        } else if (element.mozRequestFullScreen) {
+            // Firefox
+            element.mozRequestFullScreen();
         } else if (element.webkitRequestFullscreen) {
+            // Safari/Chrome/Edge
             element.webkitRequestFullscreen();
         } else if (element.msRequestFullscreen) {
+            // IE11
             element.msRequestFullscreen();
         }
+        
+        // For mobile browsers that don't support fullscreen API
+        // Apply additional CSS-based fullscreen styling
+        setTimeout(() => {
+            if (!this.isFullscreen()) {
+                // Fallback: scroll to hide address bar on mobile
+                window.scrollTo(0, 1);
+            }
+        }, 100);
     }
     
     exitFullscreen() {
         document.body.classList.remove('fullscreen-mode');
         
+        // Cross-browser exit fullscreen
         if (document.exitFullscreen) {
             document.exitFullscreen();
+        } else if (document.mozCancelFullScreen) {
+            // Firefox
+            document.mozCancelFullScreen();
         } else if (document.webkitExitFullscreen) {
+            // Safari/Chrome/Edge
             document.webkitExitFullscreen();
         } else if (document.msExitFullscreen) {
+            // IE11
             document.msExitFullscreen();
         }
     }
     
     handleFullscreenChange() {
-        const isFullscreen = !!(document.fullscreenElement || 
-                               document.webkitFullscreenElement || 
-                               document.msFullscreenElement);
+        const isFullscreen = this.isFullscreen();
         
         if (isFullscreen) {
             document.body.classList.add('fullscreen-mode');
@@ -156,6 +185,13 @@ export class ScreenManager {
                 this.showScreen('inter-round');
             }
         }
+    }
+    
+    isFullscreen() {
+        return !!(document.fullscreenElement || 
+                 document.webkitFullscreenElement || 
+                 document.mozFullScreenElement || 
+                 document.msFullscreenElement);
     }
     
     saveScreenState(screenName) {
