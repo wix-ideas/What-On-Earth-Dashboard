@@ -112,7 +112,7 @@ html, body {
 .header {
     flex: 0 0 auto;
     position: relative;
-    padding: 8px 0;
+    padding: 4px 0;
 }
 
 .brand-row {
@@ -153,7 +153,7 @@ html, body {
     font-family: var(--font-title);
     font-size: 17px;
     line-height: 1;
-    letter-spacing: 1.5px;
+    letter-spacing: 2.2px;
     color: var(--cream);
     text-transform: uppercase;
     text-shadow: 
