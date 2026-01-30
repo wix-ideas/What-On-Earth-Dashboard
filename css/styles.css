@@ -40,6 +40,13 @@ html, body {
     -webkit-text-size-adjust: 100%;
     background: var(--dark);
     font-family: var(--font-ui);
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
 }
 
 #app {
@@ -327,6 +334,13 @@ html, body {
 
 body.fullscreen-mode {
     background: var(--dark);
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    z-index: 9999;
 }
 
 body.fullscreen-mode #app {
@@ -334,7 +348,30 @@ body.fullscreen-mode #app {
     width: 100vw;
     height: 100vh;
     overflow: hidden;
-    position: relative;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 9999;
+    padding: 0;
+}
+
+body.fullscreen-mode #starBg {
+    display: block;
+    position: absolute;
+    inset: 0;
+    background: url('https://static.wixstatic.com/media/1369e3_bb2df02faad54822bfcb606973dad662~mv2.png') center/cover no-repeat;
+    z-index: 0;
+}
+
+body.fullscreen-mode #earthTop {
+    display: block;
+    position: absolute;
+    top: -86px;
+    left: 0;
+    right: 0;
+    height: 220px;
+    background: url('https://static.wixstatic.com/media/1369e3_8087604af0e44b8b997f033a30861fd1~mv2.png') center bottom/cover no-repeat;
+    z-index: 1;
 }
 
 @media screen and (orientation: portrait) and (max-width: 1024px) {
@@ -358,7 +395,9 @@ body.fullscreen-mode .screen {
     height: 100%;
     max-width: none;
     margin: 0;
-    background: var(--dark);
+    background: transparent;
+    position: relative;
+    z-index: 2;
 }
 
 body.fullscreen-mode .game-header {
@@ -419,6 +458,15 @@ body.fullscreen-mode .game-title {
     margin: 0 16px;
     writing-mode: initial;
     transform: none;
+    text-shadow: 
+        -2px -2px 0 var(--dark),
+        2px -2px 0 var(--dark),
+        -2px 2px 0 var(--dark),
+        2px 2px 0 var(--dark),
+        0 -2px 0 var(--dark),
+        0 2px 0 var(--dark),
+        -2px 0 0 var(--dark),
+        2px 0 0 var(--dark);
 }
 
 body.fullscreen-mode .close-btn {
@@ -445,6 +493,7 @@ body.fullscreen-mode .board {
     background: transparent;
     border: none;
     position: relative;
+    overflow: visible;
 }
 
 body.fullscreen-mode .concept-display {
@@ -461,12 +510,24 @@ body.fullscreen-mode .concept-display {
     color: var(--yellow);
     text-transform: uppercase;
     letter-spacing: 2px;
-    text-shadow: 2px 2px 0px var(--dark);
-    margin: 0;
+    text-shadow: 
+        -3px -3px 0 var(--dark),
+        3px -3px 0 var(--dark),
+        -3px 3px 0 var(--dark),
+        3px 3px 0 var(--dark),
+        0 -3px 0 var(--dark),
+        0 3px 0 var(--dark),
+        -3px 0 0 var(--dark),
+        3px 0 0 var(--dark);
+    margin: 0 auto;
     min-height: 120px;
     display: flex;
     align-items: center;
     justify-content: center;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
 
 body.fullscreen-mode .alien-players {
@@ -478,6 +539,8 @@ body.fullscreen-mode .alien-players {
     gap: 8px;
     flex-wrap: wrap;
     justify-content: flex-start;
+    max-height: 120px;
+    overflow-y: auto;
 }
 
 body.fullscreen-mode .alien-tile {
@@ -493,10 +556,47 @@ body.fullscreen-mode .alien-tile {
     font-family: var(--font-title);
     font-size: 24px;
     font-weight: bold;
-    color: var(--dark);
+    color: var(--cream);
     text-transform: uppercase;
     letter-spacing: 1px;
     cursor: pointer;
+    text-shadow: 
+        -2px -2px 0 var(--dark),
+        2px -2px 0 var(--dark),
+        -2px 2px 0 var(--dark),
+        2px 2px 0 var(--dark),
+        0 -2px 0 var(--dark),
+        0 2px 0 var(--dark),
+        -2px 0 0 var(--dark),
+        2px 0 0 var(--dark);
+}
+
+body.fullscreen-mode .human-tile {
+    background: var(--blue);
+    border: 3px solid var(--dark);
+    border-radius: 12px;
+    padding: 16px 20px;
+    min-width: 80px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-title);
+    font-size: 24px;
+    font-weight: bold;
+    color: var(--cream);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    cursor: pointer;
+    text-shadow: 
+        -2px -2px 0 var(--dark),
+        2px -2px 0 var(--dark),
+        -2px 2px 0 var(--dark),
+        2px 2px 0 var(--dark),
+        0 -2px 0 var(--dark),
+        0 2px 0 var(--dark),
+        -2px 0 0 var(--dark),
+        2px 0 0 var(--dark);
 }
 
 body.fullscreen-mode .astronaut-score {
@@ -516,7 +616,15 @@ body.fullscreen-mode .astronaut-score {
     font-size: 24px;
     font-weight: bold;
     color: var(--yellow);
-    text-shadow: 1px 1px 0px var(--dark);
+    text-shadow: 
+        -2px -2px 0 var(--dark),
+        2px -2px 0 var(--dark),
+        -2px 2px 0 var(--dark),
+        2px 2px 0 var(--dark),
+        0 -2px 0 var(--dark),
+        0 2px 0 var(--dark),
+        -2px 0 0 var(--dark),
+        2px 0 0 var(--dark);
 }
 
 @media (max-width: 420px) {
@@ -554,7 +662,8 @@ body.fullscreen-mode .astronaut-score {
         min-height: 100px;
     }
     
-    body.fullscreen-mode .alien-tile {
+    body.fullscreen-mode .alien-tile,
+    body.fullscreen-mode .human-tile {
         min-width: 70px;
         height: 50px;
         font-size: 20px;
@@ -586,6 +695,28 @@ body.fullscreen-mode .astronaut-score {
         width: 56px;
         height: 56px;
         font-size: 20px;
+    }
+}
+
+@supports (-webkit-appearance: none) {
+    body.fullscreen-mode {
+        -webkit-appearance: none;
+        appearance: none;
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        width: 100vw !important;
+        height: 100vh !important;
+        z-index: 999999 !important;
+    }
+    
+    body.fullscreen-mode #app {
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        width: 100vw !important;
+        height: 100vh !important;
+        z-index: 999999 !important;
     }
 }
 

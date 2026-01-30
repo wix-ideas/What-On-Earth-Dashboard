@@ -369,11 +369,17 @@ function renderAlienPlayers() {
 
     container.innerHTML = '';
 
-    state.players.slice(0, alienCount).forEach((p, idx) => {
+    state.players.forEach((p, idx) => {
+        const isAlien = idx < alienCount;
         const tile = document.createElement('div');
-        tile.className = 'alien-tile';
-        tile.onclick = () => scoreAlien(p.id);
+        tile.className = isAlien ? 'alien-tile' : 'human-tile';
+        tile.onclick = () => isAlien ? scoreAlien(p.id) : scoreHuman(p.id);
         tile.textContent = p.initials;
+        
+        if (p.team) {
+            tile.classList.add(p.team);
+        }
+        
         container.appendChild(tile);
     });
 }
@@ -463,6 +469,22 @@ function scoreAlien(playerId) {
     if (scoreEl) scoreEl.textContent = state.roundScores[playerId];
 
     checkHumanMilestones();
+
+    state.currentConcept = getRandomConcept();
+    document.getElementById('conceptDisplay').textContent = state.currentConcept;
+}
+
+function scoreHuman(playerId) {
+    if (!state.conceptRevealed) return;
+
+    const player = state.players.find(p => p.id === playerId);
+    if (!player) return;
+
+    state.roundScores[playerId]++;
+    player.score++;
+
+    const scoreEl = document.getElementById(`human-score-${playerId}`);
+    if (scoreEl) scoreEl.textContent = state.roundScores[playerId];
 
     state.currentConcept = getRandomConcept();
     document.getElementById('conceptDisplay').textContent = state.currentConcept;
@@ -596,6 +618,7 @@ window.skipConcept = skipConcept;
 window.previousConcept = previousConcept;
 window.togglePause = togglePause;
 window.scoreAlien = scoreAlien;
+window.scoreHuman = scoreHuman;
 window.goToInterRound = goToInterRound;
 window.toggleEditMode = toggleEditMode;
 window.nextRound = nextRound;

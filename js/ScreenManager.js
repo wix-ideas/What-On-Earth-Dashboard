@@ -117,15 +117,40 @@ export class ScreenManager {
     enterFullscreen() {
         const element = document.documentElement;
         
+        document.body.classList.add('fullscreen-mode');
+        
         if (element.requestFullscreen) {
-            element.requestFullscreen();
+            element.requestFullscreen({ navigationUI: "hide" }).catch(() => {
+                console.log('Fullscreen API not supported, using CSS fallback');
+            });
         } else if (element.webkitRequestFullscreen) {
             element.webkitRequestFullscreen();
         } else if (element.msRequestFullscreen) {
             element.msRequestFullscreen();
         }
         
-        document.body.classList.add('fullscreen-mode');
+        if (window.screen && window.screen.orientation) {
+            try {
+                window.screen.orientation.lock('landscape');
+            } catch (e) {
+                console.log('Orientation lock not supported');
+            }
+        }
+        
+        setTimeout(() => {
+            window.scrollTo(0, 1);
+            document.body.style.position = 'fixed';
+            document.body.style.top = '0';
+            document.body.style.left = '0';
+            document.body.style.width = '100vw';
+            document.body.style.height = '100vh';
+            document.body.style.overflow = 'hidden';
+        }, 100);
+        
+        const viewport = document.querySelector('meta[name=viewport]');
+        if (viewport) {
+            viewport.setAttribute('content', 'width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no, minimal-ui');
+        }
     }
     
     exitFullscreen() {
@@ -138,6 +163,17 @@ export class ScreenManager {
         }
         
         document.body.classList.remove('fullscreen-mode');
+        document.body.style.position = '';
+        document.body.style.top = '';
+        document.body.style.left = '';
+        document.body.style.width = '';
+        document.body.style.height = '';
+        document.body.style.overflow = '';
+        
+        const viewport = document.querySelector('meta[name=viewport]');
+        if (viewport) {
+            viewport.setAttribute('content', 'width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no');
+        }
     }
     
     handleFullscreenChange() {
