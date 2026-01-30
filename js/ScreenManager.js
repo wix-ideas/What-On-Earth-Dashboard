@@ -121,7 +121,7 @@ export class ScreenManager {
         const element = document.documentElement;
         
         if (element.requestFullscreen) {
-            element.requestFullscreen({ navigationUI: "hide" }).catch(() => {
+            element.requestFullscreen().catch(() => {
                 console.log('Fullscreen API not supported, using CSS fallback');
             });
         } else if (element.webkitRequestFullscreen) {
@@ -129,31 +129,6 @@ export class ScreenManager {
         } else if (element.msRequestFullscreen) {
             element.msRequestFullscreen();
         }
-        
-        // Force landscape orientation if supported
-        if (window.screen && window.screen.orientation) {
-            try {
-                window.screen.orientation.lock('landscape');
-            } catch (e) {
-                console.log('Orientation lock not supported');
-            }
-        }
-        
-        // Mobile-specific optimizations
-        setTimeout(() => {
-            // Scroll to hide address bar on mobile
-            window.scrollTo(0, 1);
-            
-            // Set viewport for mobile fullscreen experience
-            const viewport = document.querySelector('meta[name=viewport]');
-            if (viewport) {
-                viewport.setAttribute('content', 'width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no, minimal-ui');
-            }
-            
-            // Hide mobile browser UI by making content taller than viewport
-            document.body.style.minHeight = '100vh';
-            document.body.style.minHeight = '100dvh';
-        }, 100);
     }
     
     exitFullscreen() {
@@ -165,11 +140,6 @@ export class ScreenManager {
             document.webkitExitFullscreen();
         } else if (document.msExitFullscreen) {
             document.msExitFullscreen();
-        }
-        
-        const viewport = document.querySelector('meta[name=viewport]');
-        if (viewport) {
-            viewport.setAttribute('content', 'width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no');
         }
     }
     
