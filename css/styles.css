@@ -93,6 +93,10 @@ html, body {
     -webkit-overflow-scrolling: touch;
 }
 
+#setupScreen {
+    display: flex;
+}
+
 .screen.active {
     display: flex;
 }

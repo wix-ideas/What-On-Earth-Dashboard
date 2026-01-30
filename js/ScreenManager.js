@@ -20,10 +20,13 @@ export class ScreenManager {
             'menu': document.getElementById('menuModal')
         };
         
-        Object.values(this.screens).forEach(screen => {
+        // Hide all screens initially
+        Object.entries(this.screens).forEach(([key, screen]) => {
             if (screen) {
                 screen.style.display = 'none';
                 screen.classList.add('screen-transition');
+            } else {
+                console.warn(`Screen element not found: ${key}`);
             }
         });
     }

@@ -60,7 +60,17 @@ const modes = {
 };
 
 function showScreen(screenId) {
-    screenManager.showScreen(screenId);
+    if (screenManager) {
+        screenManager.showScreen(screenId);
+    } else {
+        // Fallback if screenManager not ready
+        const screens = document.querySelectorAll('.screen');
+        screens.forEach(s => s.style.display = 'none');
+        const targetScreen = document.getElementById(screenId + 'Screen');
+        if (targetScreen) {
+            targetScreen.style.display = 'flex';
+        }
+    }
 }
 
 function goToLanding() {
@@ -813,8 +823,12 @@ window.addEventListener('load', () => {
     
     initializeAudio();
     updateStartButton();
-    showScreen('setup');
     updateNSFWUI();
+    
+    // Show setup screen after a brief delay to ensure everything is loaded
+    setTimeout(() => {
+        showScreen('setup');
+    }, 100);
 });
 
 window.selectMode = selectMode;
