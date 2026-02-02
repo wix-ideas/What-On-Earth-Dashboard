@@ -1123,6 +1123,7 @@ body.fullscreen-mode .astronaut-score {
     stroke-width: 0.5px;
 }
 
+/* NSFW Toggle - Exact match to reference images */
 .nsfw-row {
     display: flex;
     align-items: center;
@@ -1146,12 +1147,13 @@ body.fullscreen-mode .astronaut-score {
     color: var(--cream);
     text-transform: uppercase;
     transition: all 200ms;
+    cursor: pointer;
 }
 
 .nsfw-label.active {
     background: var(--red);
     border-color: var(--red);
-    color: var(--cream);
+    color: var(--cream); /* Keep text cream, not red */
 }
 
 .nsfw-switch {
@@ -1179,7 +1181,7 @@ body.fullscreen-mode .astronaut-score {
     transition: all 200ms;
 }
 
-/* ON state - both elements turn red */
+/* ON state - both elements turn red background, cream stays cream */
 .nsfw-switch.active {
     background: var(--red);
     border-color: var(--red);
