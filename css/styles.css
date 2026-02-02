@@ -1127,15 +1127,19 @@ body.fullscreen-mode .astronaut-score {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 12px;
+    gap: 8px;
     height: 54px;
-    border-radius: 12px;
-    background: var(--red);
-    padding: 0 16px;
-    border: 3px solid var(--dark);
 }
 
 .nsfw-label {
+    flex: 1;
+    height: 54px;
+    border-radius: 12px;
+    background: var(--red);
+    border: 3px solid var(--dark);
+    display: flex;
+    align-items: center;
+    padding: 0 16px;
     font-family: var(--font-title);
     font-size: 24px;
     letter-spacing: 3px;
@@ -1145,9 +1149,9 @@ body.fullscreen-mode .astronaut-score {
 
 .nsfw-switch {
     flex: 0 0 auto;
-    width: 60px;
-    height: 32px;
-    border-radius: 16px;
+    width: 54px;
+    height: 54px;
+    border-radius: 12px;
     background: var(--cream);
     border: 3px solid var(--dark);
     position: relative;
@@ -1162,12 +1166,8 @@ body.fullscreen-mode .astronaut-score {
 }
 
 .nsfw-knob {
-    width: 22px;
-    height: 22px;
-    border-radius: 11px;
-    background: var(--dark);
-    position: absolute;
-    top: 2px;
+    display: none;
+}
     left: 2px;
     transition: transform 200ms ease;
 }
