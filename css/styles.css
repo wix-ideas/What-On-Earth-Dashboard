@@ -1135,7 +1135,7 @@ body.fullscreen-mode .astronaut-score {
     flex: 1;
     height: 54px;
     border-radius: 12px;
-    background: var(--red);
+    background: var(--dark);
     border: 3px solid var(--dark);
     display: flex;
     align-items: center;
@@ -1145,6 +1145,13 @@ body.fullscreen-mode .astronaut-score {
     letter-spacing: 3px;
     color: var(--cream);
     text-transform: uppercase;
+    transition: all 200ms;
+}
+
+.nsfw-label.active {
+    background: var(--red);
+    border-color: var(--red);
+    color: var(--cream);
 }
 
 .nsfw-switch {
@@ -1152,28 +1159,41 @@ body.fullscreen-mode .astronaut-score {
     width: 54px;
     height: 54px;
     border-radius: 12px;
-    background: var(--cream);
+    background: var(--dark);
     border: 3px solid var(--dark);
     position: relative;
     cursor: pointer;
     padding: 0;
-    transition: background 200ms;
+    transition: all 200ms;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-.nsfw-switch.active {
+.nsfw-switch::before {
+    content: '✓';
+    width: 32px;
+    height: 32px;
     background: var(--cream);
-    border-color: var(--dark);
+    border-radius: 6px;
+    transition: all 200ms;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    font-weight: bold;
+    color: var(--dark);
+    font-family: var(--font-title);
+}
+
+/* ON state - both elements turn red */
+.nsfw-switch.active {
+    background: var(--red);
+    border-color: var(--red);
 }
 
 .nsfw-knob {
     display: none;
-}
-    left: 2px;
-    transition: transform 200ms ease;
-}
-
-.nsfw-switch.active .nsfw-knob {
-    transform: translateX(28px);
 }
 
 .spacer {

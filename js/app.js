@@ -157,11 +157,14 @@ function toggleNSFW() {
 
 function updateNSFWUI() {
     const sw = document.getElementById('nsfwSwitch');
+    const label = document.querySelector('.nsfw-label');
 
     if (state.nsfwEnabled) {
         sw.classList.add('active');
+        label.classList.add('active');
     } else {
         sw.classList.remove('active');
+        label.classList.remove('active');
     }
 }
 
@@ -810,6 +813,33 @@ window.addEventListener('load', () => {
     initializeAudio();
     updateStartButton();
     updateNSFWUI();
+    
+    // Add event listeners for buttons
+    const wideAddBtn = document.getElementById('wideAddBtn');
+    if (wideAddBtn) {
+        wideAddBtn.addEventListener('click', showAddMode);
+    }
+    
+    const nsfwSwitch = document.getElementById('nsfwSwitch');
+    if (nsfwSwitch) {
+        nsfwSwitch.addEventListener('click', toggleNSFW);
+    }
+    
+    const startBtn = document.getElementById('startBtn');
+    if (startBtn) {
+        startBtn.addEventListener('click', startGame);
+    }
+    
+    // Add event listeners for add player row buttons
+    const cancelBtn = document.querySelector('#addPlayerRow .tool-btn.delete');
+    if (cancelBtn) {
+        cancelBtn.addEventListener('click', cancelAddPlayer);
+    }
+    
+    const confirmBtn = document.querySelector('#addPlayerRow .tool-btn:last-child');
+    if (confirmBtn) {
+        confirmBtn.addEventListener('click', confirmAddPlayer);
+    }
     
     // Show setup screen after a brief delay to ensure everything is loaded
     setTimeout(() => {

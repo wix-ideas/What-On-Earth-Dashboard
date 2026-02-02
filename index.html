@@ -73,7 +73,7 @@
                         <input id="addPlayerInput" class="player-input" maxlength="3" placeholder="___" 
                                onkeydown="handleAddPlayerKeydown(event)" />
                         <div class="row-tools">
-                            <button class="tool-btn delete" onclick="cancelAddPlayer()">
+                            <button class="tool-btn delete">
                                 <svg viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
                             </button>
                             <button class="tool-btn" onclick="movePlayerUp('temp')">
@@ -82,23 +82,23 @@
                             <button class="tool-btn" onclick="movePlayerDown('temp')">
                                 <svg viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>
                             </button>
-                            <button class="tool-btn" onclick="confirmAddPlayer()">
+                            <button class="tool-btn">
                                 <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
                             </button>
                         </div>
                     </div>
                 </div>
 
-                <button id="wideAddBtn" class="btn-add" onclick="showAddMode()">+</button>
+                <button id="wideAddBtn" class="btn-add">+</button>
             </div>
 
             <div class="bottom-controls">
                 <div class="nsfw-row">
                     <div class="nsfw-label">NSFW</div>
-                    <button id="nsfwSwitch" class="nsfw-switch" onclick="toggleNSFW()"></button>
+                    <button id="nsfwSwitch" class="nsfw-switch"></button>
                 </div>
 
-                <button id="startBtn" class="btn btn-primary" onclick="startGame()">START GAME</button>
+                <button id="startBtn" class="btn btn-primary">START GAME</button>
             </div>
         </div>
 
@@ -202,6 +202,19 @@
 
     <script type="module" src="js/app.js"></script>
     <script>
+        // Ensure functions are available immediately for onclick handlers
+        window.addEventListener('DOMContentLoaded', function() {
+            // Wait for module to load and attach functions
+            setTimeout(function() {
+                if (!window.showAddMode) {
+                    console.error('showAddMode function not available');
+                }
+                if (!window.toggleNSFW) {
+                    console.error('toggleNSFW function not available');
+                }
+            }, 100);
+        });
+        
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', function() {
                 navigator.serviceWorker.register('/sw.js')
