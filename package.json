@@ -1,13 +1,13 @@
 {
-  "name": "woe-game-dashboard",
+  "name": "woe-dashboard-bootstrap",
   "version": "1.0.0",
-  "description": "What On Earth Game Dashboard",
+  "description": "What On Earth Are You Talking About? - Bootstrap Dashboard",
   "main": "index.html",
   "scripts": {
     "start": "npx serve .",
     "dev": "npx serve . --port 3000"
   },
-  "keywords": ["game", "dashboard", "party-game"],
+  "keywords": ["game", "dashboard", "party-game", "bootstrap"],
   "author": "",
   "license": "MIT"
 }
