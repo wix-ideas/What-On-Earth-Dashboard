@@ -111,12 +111,13 @@ function closeModeSelect() {
 let menuOpen = false;
 
 function toggleMenu(event) {
-    // Prevent event from bubbling
+    // Prevent event from bubbling if event is provided
     if (event) {
         event.stopPropagation();
+        event.preventDefault();
     }
     
-    console.log('toggleMenu called');
+    console.log('toggleMenu called, current menuOpen:', menuOpen);
     const popover = document.getElementById('menuPopover');
     
     if (!popover) {
@@ -125,6 +126,7 @@ function toggleMenu(event) {
     }
     
     menuOpen = !menuOpen;
+    console.log('toggleMenu new menuOpen:', menuOpen);
     
     // Update all menu buttons across all screens
     const menuButtons = [
@@ -1007,18 +1009,6 @@ window.addEventListener('load', () => {
         if (startBtn) {
             startBtn.addEventListener('click', startGame);
         }
-        
-        // Add menu button event listeners
-        const menuBtns = document.querySelectorAll('.menu-btn');
-        menuBtns.forEach(btn => {
-            console.log('Adding click listener to menu button');
-            btn.addEventListener('click', function(e) {
-                console.log('Menu button clicked via event listener');
-                e.preventDefault();
-                e.stopPropagation();
-                toggleMenu(e);
-            });
-        });
         
         // Add event listeners for add player row buttons
         const cancelBtn = document.querySelector('#addPlayerRow .tool-btn.delete');
