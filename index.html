@@ -18,24 +18,11 @@
         <div id="starBg"></div>
         <div id="earthTop"></div>
 
-        <div id="modeSelectModal" class="modal">
-            <div class="modal-content">
-                <div class="game-mode-list">
-                    <button class="game-mode-btn" onclick="selectMode('woe')">What On Earth</button>
-                    <button class="game-mode-btn" onclick="selectMode('skeleton')">Skeleton Crew [2p–3p]</button>
-                    <button class="game-mode-btn" onclick="selectMode('encounters')">Close Encounters</button>
-                    <button class="game-mode-btn" onclick="selectMode('space')">Space Race</button>
-                </div>
-            </div>
-        </div>
-
-        <div id="menuModal" class="modal">
-            <div class="modal-content">
-                <div class="menu-list">
-                    <button class="btn btn-tertiary" onclick="showTutorial()">Tutorial</button>
-                    <button class="btn btn-tertiary" onclick="confirmNewGame()">New Game</button>
-                    <button class="btn btn-tertiary" onclick="confirmExit()">Exit Game</button>
-                </div>
+        <div id="menuPopover" class="menu-popover">
+            <div class="menu-list">
+                <button class="menu-item-btn" onclick="showTutorial()">TUTORIAL</button>
+                <button class="menu-item-btn" onclick="confirmNewGame()">NEW GAME</button>
+                <button class="menu-item-btn" onclick="confirmExit()">EXIT GAME</button>
             </div>
         </div>
 
@@ -46,12 +33,13 @@
                         <div class="title-line-1">WHAT ON EARTH</div>
                         <div class="title-line-2">ARE YOU TALKING ABOUT?</div>
                     </div>
-                    <button class="menu-btn" onclick="openMenu()">
-                        <div class="menu-bars">
+                    <button class="menu-btn" onclick="toggleMenu()" id="menuBtn">
+                        <div class="menu-bars" id="menuBars">
                             <div class="bar"></div>
                             <div class="bar"></div>
                             <div class="bar"></div>
                         </div>
+                        <div class="menu-x" id="menuX" style="display: none;">×</div>
                     </button>
                 </div>
             </div>
@@ -66,35 +54,49 @@
                     </select>
                 </div>
 
+                <!-- First divider below dropdown -->
+                <div class="divider"></div>
+
+                <!-- Add button - shows here when no players -->
+                <button id="wideAddBtn" class="btn-add">+</button>
+
                 <div class="players-wrap">
-                    <div id="playersList" class="players-list"></div>
-                    <div id="addPlayerRow" class="player-row" style="display: none;">
-                        <div class="player-icon"></div>
-                        <input id="addPlayerInput" class="player-input" maxlength="3" placeholder="___" 
-                               onkeydown="handleAddPlayerKeydown(event)" />
-                        <div class="row-tools">
-                            <button class="tool-btn delete">
-                                <svg viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
-                            </button>
-                            <button class="tool-btn" onclick="movePlayerUp('temp')">
-                                <svg viewBox="0 0 24 24"><path d="M7 14l5-5 5 5z"/></svg>
-                            </button>
-                            <button class="tool-btn" onclick="movePlayerDown('temp')">
-                                <svg viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>
-                            </button>
-                            <button class="tool-btn">
-                                <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
-                            </button>
-                        </div>
+                    <div id="playersList" class="players-list">
+                        <!-- Add button will be moved here when players exist -->
                     </div>
                 </div>
 
-                <button id="wideAddBtn" class="btn-add">+</button>
+                <!-- Add player input row -->
+                <div id="addPlayerRow" class="player-row" style="display: none;">
+                    <div class="player-icon"></div>
+                    <input id="addPlayerInput" class="player-input" maxlength="3" placeholder="___" 
+                           onkeydown="handleAddPlayerKeydown(event)" />
+                    <div class="row-tools">
+                        <button class="tool-btn delete">
+                            <svg viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
+                        </button>
+                        <button class="tool-btn" onclick="movePlayerUp('temp')">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="m18 15-6-6-6 6"/></svg>
+                        </button>
+                        <button class="tool-btn" onclick="movePlayerDown('temp')">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="m6 9 6 6 6-6"/></svg>
+                        </button>
+                        <button class="tool-btn">
+                            <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Tutorial text -->
+                <div class="tutorial-text" onclick="openMenu()">OPEN MENU FOR TUTORIAL</div>
                 
-                <!-- NSFW Toggle moved inside cream container -->
+                <!-- Second divider above NSFW -->
+                <div class="divider"></div>
+                
+                <!-- NSFW Toggle at bottom -->
                 <div class="nsfw-row">
-                    <div class="nsfw-label" onclick="toggleNSFW()">NSFW</div>
-                    <button id="nsfwSwitch" class="nsfw-switch" onclick="toggleNSFW()"></button>
+                    <div class="nsfw-label">NSFW</div>
+                    <button id="nsfwSwitch" class="nsfw-switch"></button>
                 </div>
             </div>
 
@@ -105,11 +107,16 @@
 
         <div id="gameScreen" class="screen">
             <div class="game-header">
+                <button id="startTimerBtn" class="start-timer-btn" onclick="startTimerFromButton()" style="display: none;">START</button>
                 <div class="timer-display" id="timerDisplay">2:00</div>
                 <div class="game-controls">
-                    <button class="control-btn" onclick="togglePause()" title="Play/Pause">▶</button>
-                    <button class="control-btn" onclick="previousConcept()" title="Previous">◄</button>
-                    <button class="control-btn" onclick="skipConcept()" title="Skip">►</button>
+                    <button class="control-btn" id="pauseBtn" onclick="togglePause()" title="Play/Pause">▶</button>
+                    <button class="control-btn" onclick="previousConcept()" title="Previous">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="m15 18-6-6 6-6"/></svg>
+                    </button>
+                    <button class="control-btn" onclick="skipConcept()" title="Skip">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="m9 18 6-6-6-6"/></svg>
+                    </button>
                 </div>
                 <div id="gameTitleText" class="game-title">
                     <div class="title-line-1">WHAT ON EARTH</div>
@@ -138,12 +145,13 @@
                         <div class="title-line-1">WHAT ON EARTH</div>
                         <div class="title-line-2">ARE YOU TALKING ABOUT?</div>
                     </div>
-                    <button class="menu-btn" onclick="openMenu()">
-                        <div class="menu-bars">
+                    <button class="menu-btn" onclick="toggleMenu()" id="menuBtnInterRound">
+                        <div class="menu-bars" id="menuBarsInterRound">
                             <div class="bar"></div>
                             <div class="bar"></div>
                             <div class="bar"></div>
                         </div>
+                        <div class="menu-x" id="menuXInterRound" style="display: none;">×</div>
                     </button>
                 </div>
             </div>
@@ -168,12 +176,13 @@
                         <div class="title-line-1">WHAT ON EARTH</div>
                         <div class="title-line-2">ARE YOU TALKING ABOUT?</div>
                     </div>
-                    <button class="menu-btn" onclick="openMenu()">
-                        <div class="menu-bars">
+                    <button class="menu-btn" onclick="toggleMenu()" id="menuBtnEndGame">
+                        <div class="menu-bars" id="menuBarsEndGame">
                             <div class="bar"></div>
                             <div class="bar"></div>
                             <div class="bar"></div>
                         </div>
+                        <div class="menu-x" id="menuXEndGame" style="display: none;">×</div>
                     </button>
                 </div>
             </div>

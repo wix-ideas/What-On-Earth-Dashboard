@@ -83,9 +83,11 @@ export class ScreenManager {
         this.performTransition(this.currentScreen, screenName, data);
         
         if (screenName === 'game') {
-            this.enterFullscreen();
+            // Use game-mode instead of fullscreen
+            document.body.classList.add('game-mode');
         } else if (this.currentScreen === 'game') {
-            this.exitFullscreen();
+            // Remove game-mode when leaving game screen
+            document.body.classList.remove('game-mode');
         }
         
         return true;

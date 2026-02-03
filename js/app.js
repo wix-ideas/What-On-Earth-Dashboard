@@ -74,6 +74,8 @@ function showScreen(screenId) {
 }
 
 function goToLanding() {
+    // Remove game mode styling when going back to setup
+    document.body.classList.remove('game-mode');
     showScreen('setup');
 }
 
@@ -105,12 +107,79 @@ function closeModeSelect() {
     // No longer needed
 }
 
+let menuOpen = false;
+
+function toggleMenu() {
+    console.log('toggleMenu called');
+    const popover = document.getElementById('menuPopover');
+    
+    if (!popover) {
+        console.error('menuPopover not found');
+        return;
+    }
+    
+    menuOpen = !menuOpen;
+    
+    // Update all menu buttons across all screens
+    const menuButtons = [
+        { bars: 'menuBars', x: 'menuX' }, // Setup screen
+        { bars: 'menuBarsInterRound', x: 'menuXInterRound' }, // Inter-round screen
+        { bars: 'menuBarsEndGame', x: 'menuXEndGame' } // End-game screen
+    ];
+    
+    if (menuOpen) {
+        popover.classList.add('active');
+        
+        // Update all menu button icons
+        menuButtons.forEach(btn => {
+            const bars = document.getElementById(btn.bars);
+            const x = document.getElementById(btn.x);
+            if (bars) bars.style.display = 'none';
+            if (x) x.style.display = 'flex';
+        });
+        
+        // Add click outside listener
+        setTimeout(() => {
+            document.addEventListener('click', closeMenuOnClickOutside);
+        }, 0);
+    } else {
+        popover.classList.remove('active');
+        
+        // Update all menu button icons
+        menuButtons.forEach(btn => {
+            const bars = document.getElementById(btn.bars);
+            const x = document.getElementById(btn.x);
+            if (bars) bars.style.display = 'flex';
+            if (x) x.style.display = 'none';
+        });
+        
+        // Remove click outside listener
+        document.removeEventListener('click', closeMenuOnClickOutside);
+    }
+}
+
+function closeMenuOnClickOutside(event) {
+    const popover = document.getElementById('menuPopover');
+    const menuBtns = [
+        document.getElementById('menuBtn'),
+        document.getElementById('menuBtnInterRound'),
+        document.getElementById('menuBtnEndGame')
+    ].filter(btn => btn !== null);
+    
+    // Check if click is outside both popover and all menu buttons
+    const clickedMenuBtn = menuBtns.some(btn => btn.contains(event.target));
+    
+    if (popover && !popover.contains(event.target) && !clickedMenuBtn) {
+        closeMenu();
+    }
+}
+
 function openMenu() {
-    document.getElementById('menuModal').classList.add('active');
+    if (!menuOpen) toggleMenu();
 }
 
 function closeMenu() {
-    document.getElementById('menuModal').classList.remove('active');
+    if (menuOpen) toggleMenu();
 }
 
 function showTutorial() {
@@ -136,6 +205,8 @@ function confirmExit() {
 
 function exitGame() {
     if (confirm('Exit game? Progress will be saved.')) {
+        // Remove game mode styling
+        document.body.classList.remove('game-mode');
         showScreen('inter-round');
     }
 }
@@ -151,7 +222,9 @@ function resetGame() {
 }
 
 function toggleNSFW() {
+    console.log('toggleNSFW called, current state:', state.nsfwEnabled);
     state.nsfwEnabled = !state.nsfwEnabled;
+    console.log('toggleNSFW new state:', state.nsfwEnabled);
     updateNSFWUI();
 }
 
@@ -177,15 +250,29 @@ function getAlienCount() {
 }
 
 function showAddMode() {
-    document.getElementById('wideAddBtn').style.display = 'none';
-    document.getElementById('addPlayerRow').style.display = 'flex';
-    document.getElementById('addPlayerInput').focus();
+    const addBtn = document.getElementById('wideAddBtn');
+    const addRow = document.getElementById('addPlayerRow');
+    
+    // Hide the + button and show the input row right after it
+    addBtn.style.display = 'none';
+    addRow.style.display = 'flex';
+    
+    // Focus on the input
+    const input = document.getElementById('addPlayerInput');
+    if (input) {
+        setTimeout(() => input.focus(), 50);
+    }
 }
 
 function cancelAddPlayer() {
-    document.getElementById('wideAddBtn').style.display = 'flex';
-    document.getElementById('addPlayerRow').style.display = 'none';
-    document.getElementById('addPlayerInput').value = '';
+    const addBtn = document.getElementById('wideAddBtn');
+    const addRow = document.getElementById('addPlayerRow');
+    const input = document.getElementById('addPlayerInput');
+    
+    // Show the + button and hide the input row
+    addBtn.style.display = 'flex';
+    addRow.style.display = 'none';
+    input.value = '';
 }
 
 function confirmAddPlayer() {
@@ -209,6 +296,8 @@ function confirmAddPlayer() {
     assignTeams();
     renderPlayers();
     updateStartButton();
+    
+    // Hide input form and show + button after adding
     cancelAddPlayer();
 }
 
@@ -238,6 +327,11 @@ function deletePlayer(id) {
 function renderPlayers() {
     const list = document.getElementById('playersList');
     const alienCount = getAlienCount();
+    const addBtn = document.getElementById('wideAddBtn');
+
+    // Store the add button temporarily
+    let addBtnParent = addBtn.parentElement;
+    let addBtnNextSibling = addBtn.nextSibling;
 
     list.innerHTML = '';
 
@@ -260,23 +354,16 @@ function renderPlayers() {
                         <svg viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
                     </button>
                     <button class="tool-btn" onclick="movePlayerUp('${p.id}')">
-                        <svg viewBox="0 0 24 24"><path d="M7 14l5-5 5 5z"/></svg>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="m18 15-6-6-6 6"/></svg>
                     </button>
                     <button class="tool-btn" onclick="movePlayerDown('${p.id}')">
-                        <svg viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="m6 9 6 6 6-6"/></svg>
                     </button>
                     <button class="tool-btn" onclick="savePlayerEdit('${p.id}')">
                         <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
                     </button>
                 </div>
             `;
-            setTimeout(() => {
-                const input = document.getElementById(`edit-${p.id}`);
-                if (input) {
-                    input.focus();
-                    input.select();
-                }
-            }, 0);
         } else {
             row.innerHTML = `
                 <div class="player-icon"></div>
@@ -289,6 +376,30 @@ function renderPlayers() {
 
         list.appendChild(row);
     });
+
+    // Handle add button positioning
+    if (state.players.length === 0) {
+        // No players - button should be in original position (outside players-wrap)
+        if (addBtnParent.classList.contains('players-list')) {
+            const playersWrap = document.querySelector('.players-wrap');
+            playersWrap.parentElement.insertBefore(addBtn, playersWrap);
+        }
+    } else {
+        // Players exist - move button to end of players list
+        list.appendChild(addBtn);
+    }
+
+    // Focus on edit input if needed
+    const editingPlayer = state.players.find(p => p.editing);
+    if (editingPlayer) {
+        setTimeout(() => {
+            const input = document.getElementById(`edit-${editingPlayer.id}`);
+            if (input) {
+                input.focus();
+                input.select();
+            }
+        }, 0);
+    }
 }
 
 function editPlayer(id) {
@@ -370,10 +481,8 @@ function startGame() {
 
     resetRound();
     
-    // Trigger fullscreen when starting the game
-    if (screenManager) {
-        screenManager.enterFullscreen();
-    }
+    // Add game mode styling without fullscreen
+    document.body.classList.add('game-mode');
     
     showScreen('game');
 }
@@ -396,6 +505,14 @@ function resetRound() {
     document.getElementById('conceptDisplay').textContent = 'TAP TO REVEAL';
     document.getElementById('conceptDisplay').style.cursor = 'pointer';
     document.getElementById('nextRoundBtn').style.display = 'none';
+    
+    // Reset START button and timer display
+    const startBtn = document.getElementById('startTimerBtn');
+    const timerDisplay = document.getElementById('timerDisplay');
+    if (startBtn && timerDisplay) {
+        startBtn.style.display = 'none';
+        timerDisplay.style.display = 'flex';
+    }
     
     updateTimerDisplay();
     updateRoundScoreDisplay();
@@ -447,12 +564,27 @@ function revealConcept() {
     conceptDisplay.textContent = state.currentConcept;
     conceptDisplay.style.cursor = 'default';
     
-    // Show start button on pause button
-    const pauseBtn = document.querySelector('.control-btn');
-    if (pauseBtn) {
-        pauseBtn.textContent = '▶';
-        pauseBtn.style.background = 'var(--green)';
+    // Show START button, hide timer
+    const startBtn = document.getElementById('startTimerBtn');
+    const timerDisplay = document.getElementById('timerDisplay');
+    if (startBtn && timerDisplay) {
+        startBtn.style.display = 'flex';
+        timerDisplay.style.display = 'none';
     }
+}
+
+function startTimerFromButton() {
+    // Hide START button, show timer
+    const startBtn = document.getElementById('startTimerBtn');
+    const timerDisplay = document.getElementById('timerDisplay');
+    if (startBtn && timerDisplay) {
+        startBtn.style.display = 'none';
+        timerDisplay.style.display = 'flex';
+    }
+    
+    // Start the timer
+    startTimer();
+    updatePauseButton();
 }
 
 function skipConcept() {
@@ -471,6 +603,13 @@ function togglePause() {
         alert('Reveal the concept first!');
         return;
     }
+    
+    // Check if START button is still visible (timer hasn't started yet)
+    const startBtn = document.getElementById('startTimerBtn');
+    if (startBtn && startBtn.style.display !== 'none') {
+        alert('Click START to begin the timer!');
+        return;
+    }
 
     if (state.timerRunning) {
         pauseTimer();
@@ -482,7 +621,7 @@ function togglePause() {
 }
 
 function updatePauseButton() {
-    const pauseBtn = document.querySelector('.control-btn');
+    const pauseBtn = document.getElementById('pauseBtn');
     if (!pauseBtn) return;
     
     if (state.timerRunning) {
@@ -581,6 +720,12 @@ function endRound() {
 }
 
 function scoreAlien(playerId) {
+    // Check if timer has started (START button should be hidden)
+    const startBtn = document.getElementById('startTimerBtn');
+    if (startBtn && startBtn.style.display !== 'none') {
+        return; // Don't allow scoring before timer starts
+    }
+    
     if (!state.conceptRevealed || !state.timerRunning) return;
 
     const player = state.players.find(p => p.id === playerId);
@@ -657,12 +802,18 @@ function checkHumanMilestones() {
 function showMilestoneAnimation() {
     const astronautScore = document.getElementById('astronautScore');
     if (astronautScore) {
+        // Switch to gold helmet
+        astronautScore.classList.add('gold');
         astronautScore.style.filter = 'brightness(1.5) saturate(1.5)';
         astronautScore.style.transform = 'scale(1.2)';
         
         setTimeout(() => {
             astronautScore.style.filter = '';
             astronautScore.style.transform = '';
+            // Keep gold helmet for a few seconds, then back to normal
+            setTimeout(() => {
+                astronautScore.classList.remove('gold');
+            }, 2000);
         }, 500);
     }
 }
@@ -814,42 +965,74 @@ window.addEventListener('load', () => {
     updateStartButton();
     updateNSFWUI();
     
-    // Add event listeners for buttons
-    const wideAddBtn = document.getElementById('wideAddBtn');
-    if (wideAddBtn) {
-        wideAddBtn.addEventListener('click', showAddMode);
-    }
-    
-    const nsfwSwitch = document.getElementById('nsfwSwitch');
-    if (nsfwSwitch) {
-        nsfwSwitch.addEventListener('click', toggleNSFW);
-    }
-    
-    const startBtn = document.getElementById('startBtn');
-    if (startBtn) {
-        startBtn.addEventListener('click', startGame);
-    }
-    
-    // Add event listeners for add player row buttons
-    const cancelBtn = document.querySelector('#addPlayerRow .tool-btn.delete');
-    if (cancelBtn) {
-        cancelBtn.addEventListener('click', cancelAddPlayer);
-    }
-    
-    const confirmBtn = document.querySelector('#addPlayerRow .tool-btn:last-child');
-    if (confirmBtn) {
-        confirmBtn.addEventListener('click', confirmAddPlayer);
-    }
+    // Add event listeners for buttons - wait for DOM to be ready
+    setTimeout(() => {
+        const wideAddBtn = document.getElementById('wideAddBtn');
+        if (wideAddBtn) {
+            wideAddBtn.addEventListener('click', showAddMode);
+        }
+        
+        const nsfwSwitch = document.getElementById('nsfwSwitch');
+        if (nsfwSwitch) {
+            console.log('Adding click listener to nsfwSwitch');
+            nsfwSwitch.addEventListener('click', function(e) {
+                console.log('nsfwSwitch clicked');
+                e.preventDefault();
+                e.stopPropagation();
+                toggleNSFW();
+            });
+        }
+        
+        const nsfwLabel = document.querySelector('.nsfw-label');
+        if (nsfwLabel) {
+            console.log('Adding click listener to nsfwLabel');
+            nsfwLabel.addEventListener('click', function(e) {
+                console.log('nsfwLabel clicked');
+                e.preventDefault();
+                e.stopPropagation();
+                toggleNSFW();
+            });
+        }
+        
+        const startBtn = document.getElementById('startBtn');
+        if (startBtn) {
+            startBtn.addEventListener('click', startGame);
+        }
+        
+        // Add menu button event listeners
+        const menuBtns = document.querySelectorAll('.menu-btn');
+        menuBtns.forEach(btn => {
+            console.log('Adding click listener to menu button');
+            btn.addEventListener('click', function(e) {
+                console.log('Menu button clicked');
+                e.preventDefault();
+                e.stopPropagation();
+                openMenu();
+            });
+        });
+        
+        // Add event listeners for add player row buttons
+        const cancelBtn = document.querySelector('#addPlayerRow .tool-btn.delete');
+        if (cancelBtn) {
+            cancelBtn.addEventListener('click', cancelAddPlayer);
+        }
+        
+        const confirmBtn = document.querySelector('#addPlayerRow .tool-btn:last-child');
+        if (confirmBtn) {
+            confirmBtn.addEventListener('click', confirmAddPlayer);
+        }
+    }, 100);
     
     // Show setup screen after a brief delay to ensure everything is loaded
     setTimeout(() => {
         showScreen('setup');
-    }, 100);
+    }, 200);
 });
 
 window.selectMode = selectMode;
 window.handleModeChange = handleModeChange;
 window.closeModeSelect = closeModeSelect;
+window.toggleMenu = toggleMenu;
 window.openMenu = openMenu;
 window.closeMenu = closeMenu;
 window.showTutorial = showTutorial;
@@ -867,6 +1050,7 @@ window.movePlayerDown = movePlayerDown;
 window.deletePlayer = deletePlayer;
 window.startGame = startGame;
 window.revealConcept = revealConcept;
+window.startTimerFromButton = startTimerFromButton;
 window.skipConcept = skipConcept;
 window.previousConcept = previousConcept;
 window.togglePause = togglePause;
