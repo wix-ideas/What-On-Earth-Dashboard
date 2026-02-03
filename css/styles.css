@@ -1413,7 +1413,7 @@ body.fullscreen-mode .astronaut-score {
 .nsfw-switch.active::before {
     left: 32px; /* Same calculation as before */
 }
-/* Game mode styling - responsive for both portrait and landscape */
+/* Game mode styling - optimized for landscape */
 body.game-mode {
     background: var(--dark);
 }
@@ -1464,27 +1464,27 @@ body.game-mode .game-header {
     align-items: center;
     justify-content: flex-start;
     width: 100%;
+    height: 80px;
     background: transparent;
     border: none;
     gap: 8px;
     padding: 8px;
     position: relative;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     flex-direction: row;
-    min-height: 64px;
 }
 
 body.game-mode .timer-display {
     background: var(--yellow);
     color: var(--dark);
     font-family: var(--font-title);
-    font-size: 28px;
+    font-size: 32px;
     font-weight: bold;
-    padding: 12px 16px;
+    padding: 16px 20px;
     border-radius: 12px;
     border: 3px solid var(--dark);
-    min-width: 100px;
-    height: 56px;
+    min-width: 120px;
+    height: 64px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1493,21 +1493,21 @@ body.game-mode .timer-display {
 
 body.game-mode .game-controls {
     display: flex;
-    gap: 6px;
+    gap: 8px;
     align-items: center;
     flex: 0 0 auto;
 }
 
 body.game-mode .control-btn {
-    width: 56px;
-    height: 56px;
+    width: 64px;
+    height: 64px;
     background: var(--yellow);
     border: 3px solid var(--dark);
     border-radius: 12px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 28px;
+    font-size: 32px;
     font-weight: 900;
     color: var(--dark);
     cursor: pointer;
@@ -1516,8 +1516,8 @@ body.game-mode .control-btn {
 }
 
 body.game-mode .control-btn svg {
-    width: 36px;
-    height: 36px;
+    width: 40px;
+    height: 40px;
     stroke-width: 4px;
 }
 
@@ -1526,19 +1526,18 @@ body.game-mode .control-btn:active {
 }
 
 body.game-mode .game-title {
-    flex: 1 1 auto;
+    flex: 1;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    min-height: 56px;
-    margin: 0 8px;
-    min-width: 0;
+    height: 64px;
+    margin: 0 16px;
 }
 
 body.game-mode .game-title .title-line-1 {
     font-family: var(--font-title);
-    font-size: 28px;
+    font-size: 36px;
     font-weight: bold;
     color: var(--yellow);
     text-transform: uppercase;
@@ -1553,14 +1552,11 @@ body.game-mode .game-title .title-line-1 {
         0 3px 0 var(--dark),
         -3px 0 0 var(--dark),
         3px 0 0 var(--dark);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
 }
 
 body.game-mode .game-title .title-line-2 {
     font-family: var(--font-title);
-    font-size: 14px;
+    font-size: 17px;
     font-weight: bold;
     color: var(--cream);
     text-transform: uppercase;
@@ -1576,21 +1572,18 @@ body.game-mode .game-title .title-line-2 {
         0 2px 0 var(--dark),
         -2px 0 0 var(--dark),
         2px 0 0 var(--dark);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
 }
 
 body.game-mode .close-btn {
-    width: 56px;
-    height: 56px;
+    width: 64px;
+    height: 64px;
     background: var(--yellow);
     border: 3px solid var(--dark);
     border-radius: 12px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 42px;
+    font-size: 48px;
     font-weight: 900;
     color: var(--dark);
     cursor: pointer;
@@ -1604,12 +1597,11 @@ body.game-mode .board {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    padding: 12px;
+    padding: 16px;
     background: transparent;
     border: none;
     position: relative;
     overflow: visible;
-    min-height: 0;
 }
 
 body.game-mode .concept-display {
@@ -1618,10 +1610,10 @@ body.game-mode .concept-display {
     background: var(--cream);
     border: 4px solid var(--dark);
     border-radius: 16px;
-    padding: 20px;
+    padding: 24px;
     text-align: center;
     font-family: var(--font-title);
-    font-size: 36px;
+    font-size: 48px;
     font-weight: bold;
     color: var(--yellow);
     text-transform: uppercase;
@@ -1635,21 +1627,28 @@ body.game-mode .concept-display {
         0 3px 0 var(--dark),
         -3px 0 0 var(--dark),
         3px 0 0 var(--dark);
-    margin: 0 auto 12px;
-    min-height: 100px;
+    margin: 0 auto;
+    min-height: 120px;
     display: flex;
     align-items: center;
     justify-content: center;
-    word-break: break-word;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
 
 body.game-mode .alien-players {
-    width: 100%;
+    position: absolute;
+    bottom: 16px;
+    left: 16px;
+    right: 96px;
     display: flex;
     gap: 4px;
     flex-wrap: wrap;
     justify-content: stretch;
-    margin-bottom: 12px;
+    max-height: 140px;
+    overflow-y: auto;
 }
 
 body.game-mode .alien-tile,
@@ -1660,12 +1659,12 @@ body.game-mode .human-tile {
     padding: 8px 12px;
     flex: 1 1 0;
     min-width: 60px;
-    height: 56px;
+    height: 64px;
     display: flex;
     align-items: center;
     justify-content: center;
     font-family: var(--font-title);
-    font-size: 16px;
+    font-size: 18px;
     font-weight: bold;
     color: var(--cream);
     text-transform: uppercase;
@@ -1690,8 +1689,11 @@ body.game-mode .human-tile:active {
 }
 
 body.game-mode .astronaut-score {
-    width: 70px;
-    height: 70px;
+    position: absolute;
+    bottom: 16px;
+    right: 16px;
+    width: 80px;
+    height: 80px;
     background-image: url('https://static.wixstatic.com/media/1369e3_d8dd2f5c0d2d499fa414f3423d6b1bbd~mv2.png');
     background-size: contain;
     background-repeat: no-repeat;
@@ -1700,7 +1702,7 @@ body.game-mode .astronaut-score {
     align-items: center;
     justify-content: center;
     font-family: var(--font-title);
-    font-size: 24px;
+    font-size: 28px;
     font-weight: bold;
     color: var(--yellow);
     text-shadow: 
@@ -1713,7 +1715,6 @@ body.game-mode .astronaut-score {
         -2px 0 0 var(--dark),
         2px 0 0 var(--dark);
     transition: filter 0.3s ease, transform 0.3s ease;
-    margin: 0 auto;
 }
 
 body.game-mode .astronaut-score.gold {
@@ -1730,139 +1731,6 @@ body.game-mode #nextRoundBtn {
     position: relative;
     z-index: 10;
     margin: 8px;
-}
-
-/* Landscape optimizations - more horizontal space */
-@media screen and (orientation: landscape) {
-    body.game-mode .game-header {
-        flex-wrap: nowrap;
-        height: 80px;
-    }
-    
-    body.game-mode .timer-display {
-        font-size: 32px;
-        padding: 16px 20px;
-        min-width: 120px;
-        height: 64px;
-    }
-    
-    body.game-mode .control-btn {
-        width: 64px;
-        height: 64px;
-        font-size: 32px;
-    }
-    
-    body.game-mode .control-btn svg {
-        width: 40px;
-        height: 40px;
-    }
-    
-    body.game-mode .game-title {
-        height: 64px;
-        margin: 0 16px;
-    }
-    
-    body.game-mode .game-title .title-line-1 {
-        font-size: 36px;
-    }
-    
-    body.game-mode .game-title .title-line-2 {
-        font-size: 17px;
-    }
-    
-    body.game-mode .close-btn {
-        width: 64px;
-        height: 64px;
-        font-size: 48px;
-    }
-    
-    body.game-mode .concept-display {
-        font-size: 48px;
-        padding: 24px;
-        min-height: 120px;
-    }
-    
-    body.game-mode .alien-tile,
-    body.game-mode .human-tile {
-        height: 64px;
-        font-size: 18px;
-    }
-    
-    body.game-mode .astronaut-score {
-        width: 80px;
-        height: 80px;
-        font-size: 28px;
-    }
-}
-
-/* Portrait optimizations - more vertical space */
-@media screen and (orientation: portrait) {
-    body.game-mode .game-header {
-        flex-wrap: wrap;
-        min-height: auto;
-    }
-    
-    body.game-mode .game-title {
-        order: -1;
-        width: 100%;
-        margin: 0 0 8px 0;
-    }
-    
-    body.game-mode .concept-display {
-        font-size: 32px;
-        padding: 16px;
-        min-height: 80px;
-    }
-    
-    body.game-mode .alien-players {
-        flex-direction: column;
-    }
-    
-    body.game-mode .alien-tile,
-    body.game-mode .human-tile {
-        width: 100%;
-        flex: 0 0 auto;
-    }
-}
-
-/* Small screens - further adjustments */
-@media (max-width: 480px) {
-    body.game-mode .timer-display {
-        font-size: 24px;
-        padding: 10px 14px;
-        min-width: 90px;
-        height: 50px;
-    }
-    
-    body.game-mode .control-btn {
-        width: 50px;
-        height: 50px;
-        font-size: 24px;
-    }
-    
-    body.game-mode .control-btn svg {
-        width: 32px;
-        height: 32px;
-    }
-    
-    body.game-mode .close-btn {
-        width: 50px;
-        height: 50px;
-        font-size: 38px;
-    }
-    
-    body.game-mode .game-title .title-line-1 {
-        font-size: 22px;
-    }
-    
-    body.game-mode .game-title .title-line-2 {
-        font-size: 12px;
-    }
-    
-    body.game-mode .concept-display {
-        font-size: 28px;
-        padding: 14px;
-    }
 }
 /* Add player row positioning */
 #addPlayerRow {
