@@ -1,0 +1,13 @@
+{
+  "name": "woe-flutter-dashboard",
+  "version": "1.0.0",
+  "description": "What On Earth Are You Talking About? - Flutter Dashboard",
+  "scripts": {
+    "build": "flutter build web --release --web-renderer html",
+    "dev": "flutter run -d web-server --web-port 3000",
+    "install": "flutter pub get"
+  },
+  "engines": {
+    "node": ">=16"
+  }
+}

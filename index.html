@@ -1,33 +1,52 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="What On Earth">
+    <meta name="mobile-web-app-capable" content="yes">
     <meta name="theme-color" content="#1C313B">
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="https://static.wixstatic.com/media/1369e3_d8dd2f5c0d2d499fa414f3423d6b1bbd~mv2.png">
     <title>What On Earth Are You Talking About?</title>
-    
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
-    <div id="app" class="container-fluid vh-100 p-3">
-        <!-- Space Background -->
+    <div id="app">
         <div id="starBg"></div>
         <div id="earthTop"></div>
 
-        <!-- Main Content -->
-        <div class="row h-100">
-            <div class="col-12">
-                <!-- Header -->
-                <div class="d-flex align-items-center justify-content-between mb-3">
-                    <div>
-                        <h1 class="game-title mb-0">WHAT ON EARTH</h1>
-                        <p class="game-subtitle mb-0">ARE YOU TALKING ABOUT?</p>
+        <div id="modeSelectModal" class="modal">
+            <div class="modal-content">
+                <div class="game-mode-list">
+                    <button class="game-mode-btn" onclick="selectMode('woe')">What On Earth</button>
+                    <button class="game-mode-btn" onclick="selectMode('skeleton')">Skeleton Crew [2p–3p]</button>
+                    <button class="game-mode-btn" onclick="selectMode('encounters')">Close Encounters</button>
+                    <button class="game-mode-btn" onclick="selectMode('space')">Space Race</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="menuModal" class="modal">
+            <div class="modal-content">
+                <div class="menu-list">
+                    <button class="btn btn-tertiary" onclick="showTutorial()">Tutorial</button>
+                    <button class="btn btn-tertiary" onclick="confirmNewGame()">New Game</button>
+                    <button class="btn btn-tertiary" onclick="confirmExit()">Exit Game</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="setupScreen" class="screen" style="display: flex;">
+            <div class="header">
+                <div class="brand-row">
+                    <div class="title-wrap">
+                        <div class="title-line-1">WHAT ON EARTH</div>
+                        <div class="title-line-2">ARE YOU TALKING ABOUT?</div>
                     </div>
-                    <button class="btn menu-btn" data-bs-toggle="modal" data-bs-target="#menuModal">
+                    <button class="menu-btn" onclick="openMenu()">
                         <div class="menu-bars">
                             <div class="bar"></div>
                             <div class="bar"></div>
@@ -35,67 +54,177 @@
                         </div>
                     </button>
                 </div>
+            </div>
 
-                <!-- Game Board -->
-                <div class="game-board flex-grow-1 d-flex flex-column">
-                    <!-- Game Mode Dropdown -->
-                    <div class="mb-3">
-                        <select class="form-select mode-dropdown" id="modeDropdown">
-                            <option value="woe">What On Earth</option>
-                            <option value="skeleton">Skeleton Crew [2p–3p]</option>
-                            <option value="encounters">Close Encounters</option>
-                            <option value="space">Space Race</option>
-                        </select>
-                    </div>
+            <div class="board">
+                <div class="mode-dropdown-wrap">
+                    <select id="modeDropdown" class="mode-dropdown" onchange="handleModeChange(event)">
+                        <option value="woe">What On Earth</option>
+                        <option value="skeleton">Skeleton Crew [2p–3p]</option>
+                        <option value="encounters">Close Encounters</option>
+                        <option value="space">Space Race</option>
+                    </select>
+                </div>
 
-                    <!-- Players List -->
-                    <div class="players-container flex-grow-1 mb-3">
-                        <div id="playersList" class="players-list"></div>
-                        
-                        <!-- Add Player Row (Hidden by default) -->
-                        <div id="addPlayerRow" class="player-row d-none">
-                            <div class="player-icon"></div>
-                            <input id="addPlayerInput" class="form-control player-input" maxlength="3" placeholder="___">
-                            <div class="player-tools">
-                                <button class="btn tool-btn" onclick="cancelAddPlayer()">×</button>
-                                <button class="btn tool-btn" onclick="confirmAddPlayer()">✓</button>
-                            </div>
+                <div class="players-wrap">
+                    <div id="playersList" class="players-list"></div>
+                    <div id="addPlayerRow" class="player-row" style="display: none;">
+                        <div class="player-icon"></div>
+                        <input id="addPlayerInput" class="player-input" maxlength="3" placeholder="___" 
+                               onkeydown="handleAddPlayerKeydown(event)" />
+                        <div class="row-tools">
+                            <button class="tool-btn delete">
+                                <svg viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
+                            </button>
+                            <button class="tool-btn" onclick="movePlayerUp('temp')">
+                                <svg viewBox="0 0 24 24"><path d="M7 14l5-5 5 5z"/></svg>
+                            </button>
+                            <button class="tool-btn" onclick="movePlayerDown('temp')">
+                                <svg viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>
+                            </button>
+                            <button class="tool-btn">
+                                <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                            </button>
                         </div>
                     </div>
+                </div>
 
-                    <!-- Add Player Button -->
-                    <button id="addBtn" class="btn add-btn w-100 mb-3" onclick="showAddMode()">+</button>
+                <button id="wideAddBtn" class="btn-add">+</button>
+            </div>
 
-                    <!-- NSFW Toggle -->
-                    <div class="nsfw-container mb-3">
-                        <div class="nsfw-label" onclick="toggleNSFW()">NSFW</div>
-                        <button id="nsfwSwitch" class="nsfw-switch" onclick="toggleNSFW()">
-                            <div class="nsfw-indicator"></div>
-                        </button>
+            <div class="bottom-controls">
+                <div class="nsfw-row">
+                    <div class="nsfw-label" onclick="toggleNSFW()">NSFW</div>
+                    <button id="nsfwSwitch" class="nsfw-switch" onclick="toggleNSFW()"></button>
+                </div>
+
+                <button id="startBtn" class="btn btn-primary">START GAME</button>
+            </div>
+        </div>
+
+        <div id="gameScreen" class="screen">
+            <div class="game-header">
+                <div class="timer-display" id="timerDisplay">2:00</div>
+                <div class="game-controls">
+                    <button class="control-btn" onclick="togglePause()" title="Play/Pause">▶</button>
+                    <button class="control-btn" onclick="previousConcept()" title="Previous">◄</button>
+                    <button class="control-btn" onclick="skipConcept()" title="Skip">►</button>
+                </div>
+                <div id="gameTitleText" class="game-title">
+                    <div class="title-line-1">WHAT ON EARTH</div>
+                    <div class="title-line-2">ARE YOU TALKING ABOUT?</div>
+                </div>
+                <button id="exitGameBtn" class="close-btn" onclick="exitGame()">×</button>
+            </div>
+
+            <div class="board">
+                <div id="conceptDisplay" class="concept-display" onclick="revealConcept()">
+                    TAP TO REVEAL
+                </div>
+
+                <div id="alienPlayers" class="alien-players"></div>
+                
+                <div class="astronaut-score" id="astronautScore">0</div>
+            </div>
+
+            <button id="nextRoundBtn" class="btn btn-primary" style="display: none;" onclick="goToInterRound()">NEXT ROUND</button>
+        </div>
+
+        <div id="interRoundScreen" class="screen">
+            <div class="header">
+                <div class="brand-row">
+                    <div class="title-wrap">
+                        <div class="title-line-1">WHAT ON EARTH</div>
+                        <div class="title-line-2">ARE YOU TALKING ABOUT?</div>
                     </div>
-
-                    <!-- Start Game Button -->
-                    <button id="startBtn" class="btn start-btn w-100" onclick="startGame()">START GAME</button>
+                    <button class="menu-btn" onclick="openMenu()">
+                        <div class="menu-bars">
+                            <div class="bar"></div>
+                            <div class="bar"></div>
+                            <div class="bar"></div>
+                        </div>
+                    </button>
                 </div>
             </div>
+
+            <div class="board">
+                <button class="btn btn-tertiary" onclick="toggleEditMode()">EDIT</button>
+
+                <div class="players-wrap">
+                    <div id="interPlayersList" class="players-list"></div>
+                </div>
+
+                <div class="spacer"></div>
+            </div>
+
+            <button class="btn btn-primary" onclick="nextRound()">NEXT ROUND</button>
+        </div>
+
+        <div id="endGameScreen" class="screen">
+            <div class="header">
+                <div class="brand-row">
+                    <div class="title-wrap">
+                        <div class="title-line-1">WHAT ON EARTH</div>
+                        <div class="title-line-2">ARE YOU TALKING ABOUT?</div>
+                    </div>
+                    <button class="menu-btn" onclick="openMenu()">
+                        <div class="menu-bars">
+                            <div class="bar"></div>
+                            <div class="bar"></div>
+                            <div class="bar"></div>
+                        </div>
+                    </button>
+                </div>
+            </div>
+
+            <div class="board">
+                <div class="winner-display">
+                    <div class="winner-text">
+                        <span id="winnerName">WINNER</span> WINS!
+                    </div>
+                    <div class="winner-score">
+                        Score: <span id="winnerScore">0</span>
+                    </div>
+                </div>
+
+                <div class="players-wrap">
+                    <div id="finalScoresList" class="players-list"></div>
+                </div>
+
+                <div class="spacer"></div>
+            </div>
+
+            <button class="btn btn-secondary" onclick="continuePlaying()">CONTINUE PLAYING</button>
+            <button class="btn btn-primary" onclick="confirmNewGame()">NEW GAME</button>
+            <button class="btn btn-tertiary" onclick="goToLanding()">MAIN MENU</button>
         </div>
     </div>
 
-    <!-- Menu Modal -->
-    <div class="modal fade" id="menuModal" tabindex="-1">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content game-modal">
-                <div class="modal-body">
-                    <button class="btn menu-item w-100 mb-3" onclick="showTutorial()">TUTORIAL</button>
-                    <button class="btn menu-item w-100 mb-3" onclick="confirmNewGame()">NEW GAME</button>
-                    <button class="btn menu-item w-100" onclick="confirmExit()">EXIT GAME</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="js/app.js"></script>
+    <script type="module" src="js/app.js"></script>
+    <script>
+        // Ensure functions are available immediately for onclick handlers
+        window.addEventListener('DOMContentLoaded', function() {
+            // Wait for module to load and attach functions
+            setTimeout(function() {
+                if (!window.showAddMode) {
+                    console.error('showAddMode function not available');
+                }
+                if (!window.toggleNSFW) {
+                    console.error('toggleNSFW function not available');
+                }
+            }, 100);
+        });
+        
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function() {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(function(registration) {
+                        console.log('ServiceWorker registration successful');
+                    }, function(err) {
+                        console.log('ServiceWorker registration failed: ', err);
+                    });
+            });
+        }
+    </script>
 </body>
 </html>

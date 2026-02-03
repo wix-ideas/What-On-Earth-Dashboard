@@ -1,0 +1,40 @@
+name: woe_dashboard
+description: What On Earth Are You Talking About? - Game Dashboard
+
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.2
+  provider: ^6.0.5
+  shared_preferences: ^2.2.2
+  audioplayers: ^5.2.1
+  flutter_svg: ^2.0.9
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.0
+
+flutter:
+  uses-material-design: true
+  
+  assets:
+    - assets/images/
+    - assets/audio/
+    
+  fonts:
+    - family: Cubano
+      fonts:
+        - asset: assets/fonts/cubano-regular.ttf
+    - family: P22Underground
+      fonts:
+        - asset: assets/fonts/P22UndergroundHeavy.ttf
+        - asset: assets/fonts/P22UndergroundBook.ttf
+          weight: 300
