@@ -1467,32 +1467,6 @@ body.game-mode .timer-display {
     flex: 0 0 auto;
 }
 
-body.game-mode .start-timer-btn {
-    background: var(--cream);
-    color: var(--dark);
-    font-family: var(--font-title);
-    font-size: 28px;
-    font-weight: bold;
-    padding: 16px 20px;
-    border-radius: 12px;
-    border: 3px solid var(--dark);
-    min-width: 120px;
-    height: 64px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex: 0 0 auto;
-    cursor: pointer;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    transition: background 0.2s ease, transform 0.1s ease;
-}
-
-body.game-mode .start-timer-btn:active {
-    transform: scale(0.95);
-    background: var(--yellow);
-}
-
 body.game-mode .game-controls {
     display: flex;
     gap: 8px;
@@ -1721,6 +1695,18 @@ body.game-mode .astronaut-score {
 
 body.game-mode .astronaut-score.gold {
     background-image: url('https://static.wixstatic.com/media/1369e3_2d0c6eab7080435e80eeaa6aaff396db~mv2.png');
+}
+
+body.game-mode #startTimerBtn {
+    position: relative;
+    z-index: 10;
+    margin: 8px;
+}
+
+body.game-mode #nextRoundBtn {
+    position: relative;
+    z-index: 10;
+    margin: 8px;
 }
 /* Add player row positioning */
 #addPlayerRow {

@@ -506,12 +506,10 @@ function resetRound() {
     document.getElementById('conceptDisplay').style.cursor = 'pointer';
     document.getElementById('nextRoundBtn').style.display = 'none';
     
-    // Reset START button and timer display
+    // Reset START button
     const startBtn = document.getElementById('startTimerBtn');
-    const timerDisplay = document.getElementById('timerDisplay');
-    if (startBtn && timerDisplay) {
+    if (startBtn) {
         startBtn.style.display = 'none';
-        timerDisplay.style.display = 'flex';
     }
     
     updateTimerDisplay();
@@ -564,22 +562,18 @@ function revealConcept() {
     conceptDisplay.textContent = state.currentConcept;
     conceptDisplay.style.cursor = 'default';
     
-    // Show START button, hide timer
+    // Show START button (cream colored, below board)
     const startBtn = document.getElementById('startTimerBtn');
-    const timerDisplay = document.getElementById('timerDisplay');
-    if (startBtn && timerDisplay) {
+    if (startBtn) {
         startBtn.style.display = 'flex';
-        timerDisplay.style.display = 'none';
     }
 }
 
 function startTimerFromButton() {
-    // Hide START button, show timer
+    // Hide START button
     const startBtn = document.getElementById('startTimerBtn');
-    const timerDisplay = document.getElementById('timerDisplay');
-    if (startBtn && timerDisplay) {
+    if (startBtn) {
         startBtn.style.display = 'none';
-        timerDisplay.style.display = 'flex';
     }
     
     // Start the timer
