@@ -110,7 +110,12 @@ function closeModeSelect() {
 
 let menuOpen = false;
 
-function toggleMenu() {
+function toggleMenu(event) {
+    // Prevent event from bubbling
+    if (event) {
+        event.stopPropagation();
+    }
+    
     console.log('toggleMenu called');
     const popover = document.getElementById('menuPopover');
     
@@ -1008,10 +1013,10 @@ window.addEventListener('load', () => {
         menuBtns.forEach(btn => {
             console.log('Adding click listener to menu button');
             btn.addEventListener('click', function(e) {
-                console.log('Menu button clicked');
+                console.log('Menu button clicked via event listener');
                 e.preventDefault();
                 e.stopPropagation();
-                openMenu();
+                toggleMenu(e);
             });
         });
         

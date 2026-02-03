@@ -352,10 +352,15 @@ html, body {
     padding: 16px;
     z-index: 1000;
     min-width: 200px;
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
 }
 
 .menu-popover.active {
     display: block;
+    opacity: 1;
+    transform: translateY(0);
 }
 
 .menu-popover .menu-list {
@@ -385,6 +390,14 @@ html, body {
     transform: scale(1.02);
 }
 
+.menu-bars {
+    width: 26px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    transition: opacity 0.2s ease;
+}
+
 .menu-x {
     font-family: var(--font-title);
     font-size: 48px; /* Same as game display close button */
@@ -394,6 +407,11 @@ html, body {
     align-items: center;
     justify-content: center;
     line-height: 1;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.menu-x:active {
+    transform: scale(0.9);
 }
 
 #menuXInterRound,
@@ -406,6 +424,12 @@ html, body {
     align-items: center;
     justify-content: center;
     line-height: 1;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+#menuXInterRound:active,
+#menuXEndGame:active {
+    transform: scale(0.9);
 }
 
 .game-mode-list {
