@@ -49,6 +49,33 @@ html, body {
     -webkit-tap-highlight-color: transparent;
 }
 
+/* Force landscape orientation hint for game mode */
+body.game-mode {
+    width: 100vw;
+    height: 100vh;
+}
+
+@media screen and (orientation: portrait) {
+    body.game-mode::before {
+        content: "Please rotate your device to landscape mode for the best experience";
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: var(--dark);
+        color: var(--cream);
+        padding: 20px;
+        border: 3px solid var(--yellow);
+        border-radius: 12px;
+        z-index: 10000;
+        text-align: center;
+        font-family: var(--font-ui);
+        font-size: 18px;
+        max-width: 80%;
+        display: none; /* Hidden by default, can be enabled if needed */
+    }
+}
+
 #app {
     height: 100vh;
     height: 100dvh;

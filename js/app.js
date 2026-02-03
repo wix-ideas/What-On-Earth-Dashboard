@@ -76,6 +76,12 @@ function showScreen(screenId) {
 function goToLanding() {
     // Remove game mode styling when going back to setup
     document.body.classList.remove('game-mode');
+    
+    // Unlock orientation
+    if (screen.orientation && screen.orientation.unlock) {
+        screen.orientation.unlock();
+    }
+    
     showScreen('setup');
 }
 
@@ -207,6 +213,12 @@ function exitGame() {
     if (confirm('Exit game? Progress will be saved.')) {
         // Remove game mode styling
         document.body.classList.remove('game-mode');
+        
+        // Unlock orientation
+        if (screen.orientation && screen.orientation.unlock) {
+            screen.orientation.unlock();
+        }
+        
         showScreen('inter-round');
     }
 }
@@ -481,8 +493,15 @@ function startGame() {
 
     resetRound();
     
-    // Add game mode styling without fullscreen
+    // Add game mode styling
     document.body.classList.add('game-mode');
+    
+    // Request landscape orientation on mobile
+    if (screen.orientation && screen.orientation.lock) {
+        screen.orientation.lock('landscape').catch(err => {
+            console.log('Orientation lock not supported or failed:', err);
+        });
+    }
     
     showScreen('game');
 }
@@ -883,6 +902,15 @@ function nextRound() {
     }
 
     resetRound();
+    
+    // Re-apply game mode styling and orientation
+    document.body.classList.add('game-mode');
+    if (screen.orientation && screen.orientation.lock) {
+        screen.orientation.lock('landscape').catch(err => {
+            console.log('Orientation lock not supported or failed:', err);
+        });
+    }
+    
     showScreen('game');
 }
 
@@ -911,6 +939,15 @@ function checkForWinner() {
 
 function continuePlaying() {
     resetRound();
+    
+    // Re-apply game mode styling and orientation
+    document.body.classList.add('game-mode');
+    if (screen.orientation && screen.orientation.lock) {
+        screen.orientation.lock('landscape').catch(err => {
+            console.log('Orientation lock not supported or failed:', err);
+        });
+    }
+    
     showScreen('game');
 }
 
