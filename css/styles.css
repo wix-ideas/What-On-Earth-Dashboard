@@ -1123,7 +1123,7 @@ body.fullscreen-mode .astronaut-score {
     stroke-width: 0.5px;
 }
 
-/* NSFW Toggle - Exact match to reference images */
+/* NSFW Toggle - Proper CSS switch matching reference images */
 .nsfw-row {
     display: flex;
     align-items: center;
@@ -1135,7 +1135,7 @@ body.fullscreen-mode .astronaut-score {
 .nsfw-label {
     flex: 1;
     height: 54px;
-    border-radius: 12px;
+    border-radius: 18px; /* Higher border-radius for more rounded corners */
     background: var(--dark);
     border: 3px solid var(--dark);
     display: flex;
@@ -1160,31 +1160,36 @@ body.fullscreen-mode .astronaut-score {
     flex: 0 0 auto;
     width: 54px;
     height: 54px;
-    border-radius: 12px;
+    border-radius: 18px; /* Higher border-radius for more rounded corners */
     background: var(--dark);
     border: 3px solid var(--dark);
     position: relative;
     cursor: pointer;
-    padding: 0;
+    padding: 4px; /* Reduced padding around switch head */
     transition: all 200ms;
     display: flex;
     align-items: center;
-    justify-content: center;
 }
 
 .nsfw-switch::before {
     content: '';
-    width: 32px;
-    height: 32px;
+    width: 20px; /* Smaller switch head */
+    height: 20px; /* Smaller switch head */
     background: var(--cream);
-    border-radius: 6px;
-    transition: all 200ms;
+    border-radius: 8px; /* Rounded switch head */
+    position: absolute;
+    left: 6px; /* Starting position (OFF state) */
+    transition: all 200ms ease;
 }
 
-/* ON state - both elements turn red background, cream stays cream */
+/* ON state - switch background turns red, head slides to right */
 .nsfw-switch.active {
     background: var(--red);
     border-color: var(--red);
+}
+
+.nsfw-switch.active::before {
+    left: 26px; /* End position (ON state) - slides to right */
 }
 
 .nsfw-knob {
