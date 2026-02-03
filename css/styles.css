@@ -1123,13 +1123,14 @@ body.fullscreen-mode .astronaut-score {
     stroke-width: 0.5px;
 }
 
-/* NSFW Toggle - Proper CSS switch matching reference images */
+/* NSFW Toggle - Inside cream container with proper CSS switch */
 .nsfw-row {
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 8px;
     height: 54px;
+    margin-top: 12px; /* Add some spacing from the add button */
 }
 
 .nsfw-label {
