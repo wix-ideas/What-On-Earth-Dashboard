@@ -1504,6 +1504,7 @@ body.game-mode .timer-display.start-mode:active {
 
 body.game-mode .timer-display.next-round-mode {
     background: var(--cream);
+    color: var(--dark);
     cursor: pointer;
     font-size: 20px;
     letter-spacing: 1px;
