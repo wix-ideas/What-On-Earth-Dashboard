@@ -603,8 +603,9 @@ function updateTimerButton() {
         const minutes = Math.floor(state.timerSeconds / 60);
         const seconds = state.timerSeconds % 60;
         timerBtn.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
-        timerBtn.style.background = 'var(--yellow)';
         timerBtn.style.cursor = 'default';
+        timerBtn.style.fontSize = '32px';
+        timerBtn.style.letterSpacing = '';
         
         // Color changes based on time remaining
         if (state.timerSeconds <= 10) {
@@ -618,13 +619,23 @@ function updateTimerButton() {
             timerBtn.style.color = 'var(--dark)';
         }
     } else if (state.timerButtonState === 'start') {
-        // Show START button
+        // Show START button - cream background
         timerBtn.textContent = 'START';
         timerBtn.classList.add('start-mode');
+        timerBtn.style.background = 'var(--cream)';
+        timerBtn.style.color = 'var(--dark)';
+        timerBtn.style.cursor = 'pointer';
+        timerBtn.style.fontSize = '32px';
+        timerBtn.style.letterSpacing = '';
     } else if (state.timerButtonState === 'next-round') {
-        // Show NEXT ROUND button
+        // Show NEXT ROUND button - cream background, dark text
         timerBtn.textContent = 'NEXT ROUND';
         timerBtn.classList.add('next-round-mode');
+        timerBtn.style.background = 'var(--cream)';
+        timerBtn.style.color = 'var(--dark)';
+        timerBtn.style.cursor = 'pointer';
+        timerBtn.style.fontSize = '20px';
+        timerBtn.style.letterSpacing = '1px';
     }
 }
 
@@ -793,7 +804,7 @@ function showScoreAnimation(playerId, text, color) {
             animation.style.textShadow = '-2px -2px 0 var(--dark), 2px -2px 0 var(--dark), -2px 2px 0 var(--dark), 2px 2px 0 var(--dark)';
             animation.style.top = '-10px';
             animation.style.left = '50%';
-            animation.style.transform = 'translateX(-50%)';
+            animation.style.marginLeft = '-14px'; // Half of approximate text width for centering
             
             tile.style.position = 'relative';
             tile.appendChild(animation);
@@ -838,11 +849,11 @@ function showMilestoneAnimation() {
         astronautScore.classList.add('gold');
         astronautScore.style.filter = 'brightness(1.5) saturate(1.5)';
         
-        // Show green +1 animation above helmet (per documentation)
+        // Show YELLOW +1 animation above helmet
         const animation = document.createElement('div');
         animation.textContent = '+1';
         animation.style.position = 'absolute';
-        animation.style.color = 'var(--green)';
+        animation.style.color = 'var(--yellow)';
         animation.style.fontFamily = 'var(--font-title)';
         animation.style.fontSize = '28px';
         animation.style.fontWeight = 'bold';
@@ -852,7 +863,7 @@ function showMilestoneAnimation() {
         animation.style.textShadow = '-2px -2px 0 var(--dark), 2px -2px 0 var(--dark), -2px 2px 0 var(--dark), 2px 2px 0 var(--dark)';
         animation.style.top = '-10px';
         animation.style.left = '50%';
-        animation.style.transform = 'translateX(-50%)';
+        animation.style.marginLeft = '-14px'; // Half of approximate text width for centering
         
         astronautScore.appendChild(animation);
         
