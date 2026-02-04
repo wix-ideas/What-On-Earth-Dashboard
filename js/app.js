@@ -669,7 +669,7 @@ function updatePauseButton() {
         pauseBtn.style.background = 'var(--yellow)';
     } else {
         pauseBtn.textContent = '▶';
-        pauseBtn.style.background = 'var(--green)';
+        pauseBtn.style.background = 'var(--yellow)';
     }
 }
 
@@ -764,9 +764,8 @@ function scoreAlien(playerId) {
     // Check for human milestone bonuses
     checkHumanMilestones();
 
-    // Update displays
+    // Update displays (don't re-render players to preserve animations)
     updateRoundScoreDisplay();
-    renderAlienPlayers();
 
     // Load next concept
     state.currentConcept = getRandomConcept();
@@ -775,18 +774,23 @@ function scoreAlien(playerId) {
 
 function showScoreAnimation(playerId, text, color) {
     // Find the player tile
+    const player = state.players.find(p => p.id === playerId);
+    if (!player) return;
+    
     const tiles = document.querySelectorAll('.alien-tile, .human-tile');
     tiles.forEach(tile => {
-        if (tile.textContent.includes(state.players.find(p => p.id === playerId)?.initials)) {
+        if (tile.textContent.trim() === player.initials) {
             const animation = document.createElement('div');
             animation.textContent = text;
             animation.style.position = 'absolute';
             animation.style.color = color;
             animation.style.fontFamily = 'var(--font-title)';
-            animation.style.fontSize = '24px';
+            animation.style.fontSize = '28px';
             animation.style.fontWeight = 'bold';
             animation.style.pointerEvents = 'none';
             animation.style.animation = 'floatUp 1s ease-out forwards';
+            animation.style.zIndex = '100';
+            animation.style.textShadow = '-2px -2px 0 var(--dark), 2px -2px 0 var(--dark), -2px 2px 0 var(--dark), 2px 2px 0 var(--dark)';
             
             tile.style.position = 'relative';
             tile.appendChild(animation);
