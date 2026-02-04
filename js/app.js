@@ -791,6 +791,9 @@ function showScoreAnimation(playerId, text, color) {
             animation.style.animation = 'floatUp 1s ease-out forwards';
             animation.style.zIndex = '100';
             animation.style.textShadow = '-2px -2px 0 var(--dark), 2px -2px 0 var(--dark), -2px 2px 0 var(--dark), 2px 2px 0 var(--dark)';
+            animation.style.top = '-10px';
+            animation.style.left = '50%';
+            animation.style.transform = 'translateX(-50%)';
             
             tile.style.position = 'relative';
             tile.appendChild(animation);
@@ -833,11 +836,11 @@ function showMilestoneAnimation() {
         astronautScore.style.filter = 'brightness(1.5) saturate(1.5)';
         astronautScore.style.transform = 'scale(1.2)';
         
-        // Show +1 animation on helmet
+        // Show green +1 animation above helmet (per documentation)
         const animation = document.createElement('div');
         animation.textContent = '+1';
         animation.style.position = 'absolute';
-        animation.style.color = 'var(--yellow)';
+        animation.style.color = 'var(--green)';
         animation.style.fontFamily = 'var(--font-title)';
         animation.style.fontSize = '28px';
         animation.style.fontWeight = 'bold';
@@ -845,9 +848,9 @@ function showMilestoneAnimation() {
         animation.style.animation = 'floatUp 1s ease-out forwards';
         animation.style.zIndex = '100';
         animation.style.textShadow = '-2px -2px 0 var(--dark), 2px -2px 0 var(--dark), -2px 2px 0 var(--dark), 2px 2px 0 var(--dark)';
-        animation.style.top = '50%';
+        animation.style.top = '-10px';
         animation.style.left = '50%';
-        animation.style.transform = 'translate(-50%, -50%)';
+        animation.style.transform = 'translateX(-50%)';
         
         astronautScore.style.position = 'relative';
         astronautScore.appendChild(animation);
