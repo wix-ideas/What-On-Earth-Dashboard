@@ -1489,6 +1489,28 @@ body.game-mode .timer-display {
     align-items: center;
     justify-content: center;
     flex: 0 0 auto;
+    cursor: default;
+    transition: background 0.2s ease;
+}
+
+body.game-mode .timer-display.start-mode {
+    background: var(--cream);
+    cursor: pointer;
+}
+
+body.game-mode .timer-display.start-mode:active {
+    transform: scale(0.95);
+}
+
+body.game-mode .timer-display.next-round-mode {
+    background: var(--cream);
+    cursor: pointer;
+    font-size: 20px;
+    letter-spacing: 1px;
+}
+
+body.game-mode .timer-display.next-round-mode:active {
+    transform: scale(0.95);
 }
 
 body.game-mode .game-controls {

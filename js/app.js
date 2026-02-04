@@ -28,7 +28,8 @@ const state = {
     timerPausedTime: 0,
     lastMilestone: 0,
     audioEnabled: true,
-    audioElements: {}
+    audioElements: {},
+    timerButtonState: 'timer' // 'timer', 'start', 'next-round'
 };
 
 const concepts = {
@@ -506,6 +507,7 @@ function resetRound() {
     state.timerStartTime = null;
     state.timerPausedTime = 0;
     state.lastMilestone = 0;
+    state.timerButtonState = 'timer';
 
     state.players.forEach(p => {
         state.roundScores[p.id] = 0;
@@ -513,15 +515,8 @@ function resetRound() {
 
     document.getElementById('conceptDisplay').textContent = 'TAP TO REVEAL';
     document.getElementById('conceptDisplay').style.cursor = 'pointer';
-    document.getElementById('nextRoundBtn').style.display = 'none';
     
-    // Reset START button
-    const startBtn = document.getElementById('startTimerBtn');
-    if (startBtn) {
-        startBtn.style.display = 'none';
-    }
-    
-    updateTimerDisplay();
+    updateTimerButton();
     updateRoundScoreDisplay();
     renderAlienPlayers();
 }
@@ -571,23 +566,66 @@ function revealConcept() {
     conceptDisplay.textContent = state.currentConcept;
     conceptDisplay.style.cursor = 'default';
     
-    // Show START button (cream colored, below board)
-    const startBtn = document.getElementById('startTimerBtn');
-    if (startBtn) {
-        startBtn.style.display = 'flex';
-    }
+    // Change timer button to START
+    state.timerButtonState = 'start';
+    updateTimerButton();
 }
 
 function startTimerFromButton() {
-    // Hide START button
-    const startBtn = document.getElementById('startTimerBtn');
-    if (startBtn) {
-        startBtn.style.display = 'none';
-    }
+    // Change button back to timer mode
+    state.timerButtonState = 'timer';
+    updateTimerButton();
     
     // Start the timer
     startTimer();
     updatePauseButton();
+}
+
+function handleTimerButtonClick() {
+    if (state.timerButtonState === 'start') {
+        // START button clicked - begin timer
+        startTimerFromButton();
+    } else if (state.timerButtonState === 'next-round') {
+        // NEXT ROUND button clicked
+        goToInterRound();
+    }
+    // If state is 'timer', button is not clickable (just displays time)
+}
+
+function updateTimerButton() {
+    const timerBtn = document.getElementById('timerButton');
+    if (!timerBtn) return;
+    
+    timerBtn.classList.remove('start-mode', 'next-round-mode');
+    
+    if (state.timerButtonState === 'timer') {
+        // Show timer
+        const minutes = Math.floor(state.timerSeconds / 60);
+        const seconds = state.timerSeconds % 60;
+        timerBtn.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+        timerBtn.style.background = 'var(--yellow)';
+        timerBtn.style.cursor = 'default';
+        
+        // Color changes based on time remaining
+        if (state.timerSeconds <= 10) {
+            timerBtn.style.background = 'var(--red)';
+            timerBtn.style.color = 'var(--cream)';
+        } else if (state.timerSeconds <= 30) {
+            timerBtn.style.background = 'var(--yellow)';
+            timerBtn.style.color = 'var(--dark)';
+        } else {
+            timerBtn.style.background = 'var(--yellow)';
+            timerBtn.style.color = 'var(--dark)';
+        }
+    } else if (state.timerButtonState === 'start') {
+        // Show START button
+        timerBtn.textContent = 'START';
+        timerBtn.classList.add('start-mode');
+    } else if (state.timerButtonState === 'next-round') {
+        // Show NEXT ROUND button
+        timerBtn.textContent = 'NEXT ROUND';
+        timerBtn.classList.add('next-round-mode');
+    }
 }
 
 function skipConcept() {
@@ -607,9 +645,8 @@ function togglePause() {
         return;
     }
     
-    // Check if START button is still visible (timer hasn't started yet)
-    const startBtn = document.getElementById('startTimerBtn');
-    if (startBtn && startBtn.style.display !== 'none') {
+    // Check if START button is still showing
+    if (state.timerButtonState === 'start') {
         alert('Click START to begin the timer!');
         return;
     }
@@ -671,26 +708,7 @@ function pauseTimer() {
 }
 
 function updateTimerDisplay() {
-    const minutes = Math.floor(state.timerSeconds / 60);
-    const seconds = state.timerSeconds % 60;
-    const display = `${minutes}:${seconds.toString().padStart(2, '0')}`;
-    
-    const timerEl = document.getElementById('timerDisplay');
-    if (timerEl) {
-        timerEl.textContent = display;
-        
-        // Color changes based on time remaining
-        if (state.timerSeconds <= 10) {
-            timerEl.style.background = 'var(--red)';
-            timerEl.style.color = 'var(--cream)';
-        } else if (state.timerSeconds <= 30) {
-            timerEl.style.background = 'var(--yellow)';
-            timerEl.style.color = 'var(--dark)';
-        } else {
-            timerEl.style.background = 'var(--yellow)';
-            timerEl.style.color = 'var(--dark)';
-        }
-    }
+    updateTimerButton();
 }
 
 function checkTimerAudioCues() {
@@ -719,13 +737,14 @@ function endRound() {
         conceptDisplay.style.cursor = 'default';
     }
     
-    document.getElementById('nextRoundBtn').style.display = 'flex';
+    // Change timer button to NEXT ROUND
+    state.timerButtonState = 'next-round';
+    updateTimerButton();
 }
 
 function scoreAlien(playerId) {
-    // Check if timer has started (START button should be hidden)
-    const startBtn = document.getElementById('startTimerBtn');
-    if (startBtn && startBtn.style.display !== 'none') {
+    // Check if timer has started (button should be in timer mode and running)
+    if (state.timerButtonState !== 'timer' || !state.timerRunning) {
         return; // Don't allow scoring before timer starts
     }
     
@@ -1049,6 +1068,7 @@ window.movePlayerDown = movePlayerDown;
 window.deletePlayer = deletePlayer;
 window.startGame = startGame;
 window.revealConcept = revealConcept;
+window.handleTimerButtonClick = handleTimerButtonClick;
 window.startTimerFromButton = startTimerFromButton;
 window.skipConcept = skipConcept;
 window.previousConcept = previousConcept;

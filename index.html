@@ -107,7 +107,7 @@
 
         <div id="gameScreen" class="screen">
             <div class="game-header">
-                <div class="timer-display" id="timerDisplay">2:00</div>
+                <button id="timerButton" class="timer-display" onclick="handleTimerButtonClick()">2:00</button>
                 <div class="game-controls">
                     <button class="control-btn" id="pauseBtn" onclick="togglePause()" title="Play/Pause">▶</button>
                     <button class="control-btn" onclick="previousConcept()" title="Previous">
@@ -133,9 +133,6 @@
                 
                 <div class="astronaut-score" id="astronautScore">0</div>
             </div>
-
-            <button id="startTimerBtn" class="btn btn-primary" style="display: none;" onclick="startTimerFromButton()">START</button>
-            <button id="nextRoundBtn" class="btn btn-primary" style="display: none;" onclick="goToInterRound()">NEXT ROUND</button>
         </div>
 
         <div id="interRoundScreen" class="screen">
