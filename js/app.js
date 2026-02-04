@@ -789,7 +789,7 @@ function showScoreAnimation(playerId, text, color) {
             animation.style.fontWeight = 'bold';
             animation.style.pointerEvents = 'none';
             animation.style.animation = 'floatUp 1s ease-out forwards';
-            animation.style.zIndex = '100';
+            animation.style.zIndex = '9999';
             animation.style.textShadow = '-2px -2px 0 var(--dark), 2px -2px 0 var(--dark), -2px 2px 0 var(--dark), 2px 2px 0 var(--dark)';
             animation.style.top = '-10px';
             animation.style.left = '50%';
@@ -831,10 +831,12 @@ function checkHumanMilestones() {
 function showMilestoneAnimation() {
     const astronautScore = document.getElementById('astronautScore');
     if (astronautScore) {
+        // Ensure position stays absolute
+        astronautScore.style.position = 'absolute';
+        
         // Switch to gold helmet
         astronautScore.classList.add('gold');
         astronautScore.style.filter = 'brightness(1.5) saturate(1.5)';
-        astronautScore.style.transform = 'scale(1.2)';
         
         // Show green +1 animation above helmet (per documentation)
         const animation = document.createElement('div');
@@ -846,20 +848,18 @@ function showMilestoneAnimation() {
         animation.style.fontWeight = 'bold';
         animation.style.pointerEvents = 'none';
         animation.style.animation = 'floatUp 1s ease-out forwards';
-        animation.style.zIndex = '100';
+        animation.style.zIndex = '9999';
         animation.style.textShadow = '-2px -2px 0 var(--dark), 2px -2px 0 var(--dark), -2px 2px 0 var(--dark), 2px 2px 0 var(--dark)';
         animation.style.top = '-10px';
         animation.style.left = '50%';
         animation.style.transform = 'translateX(-50%)';
         
-        astronautScore.style.position = 'relative';
         astronautScore.appendChild(animation);
         
         setTimeout(() => animation.remove(), 1000);
         
         setTimeout(() => {
             astronautScore.style.filter = '';
-            astronautScore.style.transform = '';
             // Keep gold helmet for a few seconds, then back to normal
             setTimeout(() => {
                 astronautScore.classList.remove('gold');
